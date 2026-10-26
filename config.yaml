@@ -1,0 +1,52 @@
+# Configuración de la ingesta de datos — MVP Fenómeno El Niño Perú
+# Edita este archivo; no hace falta tocar el código.
+
+fecha_inicio: "1980-01-01"
+zona_horaria: "America/Lima"
+
+# Puntos a monitorear (piloto: región Piura, una ciudad por provincia).
+# Para cubrir todo el Perú, pon true: se agrega un punto en el centro de cada una de las 195 provincias
+# (la lista se genera sola la primera vez en datos/puntos_provincias.csv).
+usar_puntos_provincias_csv: false
+
+puntos:
+  - {id: piura,       ciudad: Piura,       provincia: Piura,       departamento: Piura, lat: -5.1945, lon: -80.6328}
+  - {id: sullana,     ciudad: Sullana,     provincia: Sullana,     departamento: Piura, lat: -4.9039, lon: -80.6853}
+  - {id: paita,       ciudad: Paita,       provincia: Paita,       departamento: Piura, lat: -5.0892, lon: -81.1144}
+  - {id: talara,      ciudad: Talara,      provincia: Talara,      departamento: Piura, lat: -4.5772, lon: -81.2719}
+  - {id: sechura,     ciudad: Sechura,     provincia: Sechura,     departamento: Piura, lat: -5.5569, lon: -80.8222}
+  - {id: chulucanas,  ciudad: Chulucanas,  provincia: Morropon,    departamento: Piura, lat: -5.0925, lon: -80.1625}
+  - {id: ayabaca,     ciudad: Ayabaca,     provincia: Ayabaca,     departamento: Piura, lat: -4.6397, lon: -79.7156}
+  - {id: huancabamba, ciudad: Huancabamba, provincia: Huancabamba, departamento: Piura, lat: -5.2386, lon: -79.4508}
+
+# --- Open-Meteo: histórico ERA5 (desde 1940) y pronóstico a 7 días. Gratis, sin clave. ---
+openmeteo:
+  activo: true
+  variables_diarias:
+    - temperature_2m_max
+    - temperature_2m_min
+    - temperature_2m_mean
+    - precipitation_sum
+    - wind_speed_10m_max
+    - shortwave_radiation_sum
+    - et0_fao_evapotranspiration
+  bloque_anios: 5          # el histórico se pide en bloques para no chocar con los límites gratuitos
+  presupuesto_historico: 4000  # consultas de histórico por corrida (el plan gratis da ~10 000 al día y
+                               # el resto se reserva para el pronóstico y "Hoy"). Con clave pagada se puede subir.
+  pausa_seg: 3             # pausa entre llamadas
+  retraso_archivo_dias: 6  # ERA5 se publica con ~5 días de retraso
+  solape_dias: 10          # se vuelven a bajar los últimos días (ERA5 corrige datos recientes)
+  pronostico:
+    activo: true
+    dias: 7
+    modelos: [ecmwf_ifs025, gfs_seamless]   # se guarda cada pronóstico con su fecha de emisión
+
+# --- NOAA CPC: índices Niño 1+2 (costa peruana), 3, 4 y 3.4. Mensual desde 1950 y semanal desde 1990. ---
+noaa_enso:
+  activo: true
+
+# --- CHIRPS: lluvia diaria en grilla desde 1981 (archivos anuales). ---
+chirps:
+  activo: true
+  resolucion: p25          # p25 = 0.25° (~27 km, ~50-100 MB por año). p05 = 0.05° (~5 km, >1 GB por año)
+  dia_actualizacion: 0     # en la corrida diaria solo se revisa los lunes (0=lunes); publica con ~3 semanas de retraso

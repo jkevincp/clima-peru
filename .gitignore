@@ -1,0 +1,7 @@
+datos/_tmp/
+datos/logs/
+*.tmp
+__pycache__/
+.venv/
+sitio/
+datos/ahora/

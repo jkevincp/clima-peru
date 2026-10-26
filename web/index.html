@@ -1,0 +1,48 @@
+<title>Vigía Niño Perú</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Riesgo de lluvias y calor a 7 días por provincia del Perú, con el estado del mar frente a la costa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="leaflet.css">
+<link rel="stylesheet" href="estilos.css">
+
+<div class="app">
+  <header class="barra">
+    <div class="marca">
+      <svg class="marca-icono" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 20c4-5 8-5 12 0s8 5 14 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M3 26c4-5 8-5 12 0s8 5 14 0" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".45"/><circle cx="22" cy="9" r="4.5" fill="currentColor"/></svg>
+      <div>
+        <h1>Vigía Niño</h1>
+        <p class="marca-sub">Riesgo a 7 días · <span id="actualizado">Perú</span></p>
+      </div>
+    </div>
+    <button class="mar-chip" id="mar-chip" type="button" aria-label="Ver el estado del mar frente a la costa">
+      <span class="mar-chip-label">Mar Niño 1+2</span>
+      <span class="mar-chip-valor" id="mar-chip-valor">—</span>
+      <span class="mar-chip-cat" id="mar-chip-cat"></span>
+    </button>
+    <div class="buscar">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input id="buscar" type="search" list="lugares" placeholder="Busca tu ciudad o provincia" autocomplete="off" aria-label="Buscar ciudad o provincia">
+      <datalist id="lugares"></datalist>
+    </div>
+  </header>
+
+  <div class="aviso-demo" id="aviso-demo" hidden>Datos de demostración: los valores no son reales. Corre <code>python run.py actualizar</code> para ver los datos verdaderos.</div>
+
+  <div class="aviso-nuevo" id="aviso-nuevo" role="status" hidden>Datos actualizados</div>
+
+  <main class="cuerpo">
+    <section class="mapa-caja" aria-label="Mapa">
+      <div id="mapa"></div>
+      <div class="leyenda" id="leyenda" aria-label="Niveles"></div>
+    </section>
+    <aside class="panel" id="panel" aria-live="polite">
+      <div class="cargando">Cargando datos…</div>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app.js"></script>
