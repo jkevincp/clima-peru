@@ -1,0 +1,80 @@
+# En los servidores de GitHub (sin tu computadora):
+#   - Cada mañana: descarga todo lo nuevo, lo guarda en datos/ y publica el mapa.
+#   - Cada hora: actualiza solo "Hoy" (si llueve ahora, cuánto lleva) y vuelve a publicar el mapa.
+#     Esa consulta no se guarda en el repositorio, así no crece.
+name: Actualizar datos y mapa
+
+on:
+  schedule:
+    - cron: "17 12 * * *"     # completa: 07:17 hora de Lima (12:17 UTC)
+    - cron: "47 * * * *"      # solo "Hoy": cada hora, al minuto 47 (los modelos se renuevan cada hora)
+  workflow_dispatch:          # botón "Run workflow" para correrlo a mano
+    inputs:
+      fuentes:
+        description: "Fuentes (noaa,pronostico,ahora,openmeteo,chirps)"
+        default: "noaa,pronostico,ahora,openmeteo,chirps"
+
+permissions:
+  contents: write   # guardar los datos en el repositorio
+  pages: write      # publicar el mapa
+  id-token: write
+
+# La corrida completa y la de cada hora van en filas separadas: mientras la completa descarga
+# el histórico (puede tardar), "Hoy" se sigue actualizando.
+concurrency:
+  group: ${{ github.event.schedule == '47 * * * *' && 'hoy' || 'completa' }}
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    environment:
+      name: github-pages
+      url: ${{ steps.publicar.outputs.page_url }}
+    env:
+      OPENMETEO_API_KEY: ${{ secrets.OPENMETEO_API_KEY }}   # opcional; vacío = API gratuita
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Descargar datos
+        run: python run.py actualizar --solo "${{ env.FUENTES }}"
+        env:
+          FUENTES: ${{ github.event.schedule == '47 * * * *' && 'ahora' || github.event.inputs.fuentes || 'noaa,pronostico,ahora,openmeteo,chirps' }}
+
+      - name: Resumen
+        if: always() && github.event.schedule != '47 * * * *'
+        run: python run.py estado
+
+      - name: Guardar datos en el repositorio
+        if: always() && github.event.schedule != '47 * * * *'
+        run: |
+          git config user.name "bot-clima"
+          git config user.email "bot-clima@users.noreply.github.com"
+          git add datos/
+          git diff --cached --quiet || git commit -m "Datos clima $(date -u +%F)"
+          git push
+
+      - name: Generar el mapa
+        if: always()
+        run: python run.py web
+
+      - uses: actions/configure-pages@v5
+        if: always()
+
+      - uses: actions/upload-pages-artifact@v3
+        if: always()
+        with:
+          path: sitio
+
+      - name: Publicar el mapa
+        id: publicar
+        if: always()
+        uses: actions/deploy-pages@v4
