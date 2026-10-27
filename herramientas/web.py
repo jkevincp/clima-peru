@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from fuentes.comun import DATOS, RAIZ, cargar_puntos, get, log, sesion
-from fuentes import horas
+from fuentes import horas, noaa_enso
 from fuentes.openmeteo import HORARIO_ULTIMO
 from herramientas import criterios, hoy as hoy_mod
 from herramientas.puntos import _centroide
@@ -57,8 +57,26 @@ def _mar():
     r = DATOS / "enso" / "nino_mensual.parquet"
     if r.exists():
         m = pd.read_parquet(r).dropna(subset=["icen_aprox"]).sort_values("fecha")
-        u = m.iloc[-1]
-        out["icen"] = {"mes": f"{u.fecha:%Y-%m}", "valor": float(u.icen_aprox), "categoria": u.icen_categoria}
+        if len(m):
+            u = m.iloc[-1]
+            out["icen"] = {"mes": f"{u.fecha:%Y-%m}", "valor": float(u.icen_aprox), "categoria": u.icen_categoria,
+                           "fuente": "ERSST mensual"}
+    # El archivo mensual de NOAA a veces se atrasa meses; si es así, se estima con el semanal (OISST):
+    # media móvil de 3 meses de la anomalía mensual de Niño 1+2.
+    r = DATOS / "enso" / "nino_semanal.parquet"
+    if r.exists():
+        w = pd.read_parquet(r).set_index("fecha").sort_index()
+        mes = w["nino12_anom"].resample("MS").mean()
+        cuenta = w["nino12_anom"].resample("MS").count()
+        mes = mes[cuenta >= 3]  # meses con al menos 3 semanas
+        icen = mes.rolling(3).mean().dropna()
+        if len(icen):
+            centro = icen.index[-1] - pd.DateOffset(months=1)  # el valor corresponde al mes central
+            actual = out.get("icen")
+            if not actual or pd.Timestamp(actual["mes"] + "-01") < centro - pd.DateOffset(months=1):
+                v = round(float(icen.iloc[-1]), 2)
+                out["icen"] = {"mes": f"{centro:%Y-%m}", "valor": v, "categoria": noaa_enso.categoria_icen(v),
+                               "fuente": "OISST semanal"}
     return out
 
 

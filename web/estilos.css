@@ -240,7 +240,8 @@ h1, h2, h3 { font-family: var(--f-display); font-stretch: 85%; margin: 0; text-w
 .leaflet-tooltip-top::before { border-top-color: var(--tinta); }
 .leaflet-tooltip b { font-weight: 600; }
 .leaflet-interactive:focus { outline: none; }
-.capa-mapa { opacity: .55; }
+.capa-mapa { opacity: .5; filter: grayscale(1) contrast(.9); }
+.capa-mapa-oscura { opacity: .45; filter: grayscale(1) invert(1) contrast(.85) brightness(.9); }
 @media (prefers-reduced-motion: reduce) {
   .leaflet-zoom-anim .leaflet-zoom-animated, .leaflet-fade-anim .leaflet-tooltip { transition: none !important; }
 }

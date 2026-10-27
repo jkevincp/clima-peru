@@ -20,6 +20,11 @@ DIAS_CORTO = ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"]
 INTENSIDAD = {1: "más fuerte de lo normal", 2: "muy fuerte para la zona", 3: "extrema para la zona"}
 EVENTOS = {1983: "Niño 1982-83", 1998: "Niño 1997-98", 2017: "Niño costero 2017", 2023: "Niño costero 2023"}
 MINIMO_MM = 5.0  # por debajo de esto no se alerta, aunque sea raro para la zona
+# Pisos en mm para cada clase: en zonas secas (costa en octubre) casi cualquier lluvia es "rara" para la
+# estadística; estos pisos evitan que 7 mm se llamen "extremos".
+PISO_FUERTE_MM = 10.0   # "muy fuerte para la zona"
+PISO_EXTREMA_MM = 20.0  # "extrema para la zona" (en ciudades de la costa norte, 20 mm ya inundan calles)
+PISO_SEMANA_MM = (12.0, 25.0)  # acumulado de 7 días: "más de lo normal" y "muy por encima"
 LIGERA_MM = 0.5  # desde aquí se menciona como lluvia ligera, sin subir el nivel
 CONSEJO_FLORACION = ("Si tu cultivo está en floración, la humedad favorece oídio y antracnosis: "
                      "revisa tu plan sanitario y evita aplicar justo antes de la lluvia.")
@@ -78,8 +83,8 @@ def climatologia(hist):
         else:  # zonas y meses casi sin lluvia: umbrales fijos
             p90, p95, p99 = 5.0, 10.0, 20.0
         t1 = max(p90, MINIMO_MM)
-        t2 = max(p95, t1)
-        t3 = max(p99, t2)
+        t2 = max(p95, t1, PISO_FUERTE_MM)
+        t3 = max(p99, t2, PISO_EXTREMA_MM)
         v7, v15 = s7.values[m], s15.values[m]
         filas.append({"doy": d, "t1": t1, "t2": t2, "t3": t3,
                       "p50_7d": np.nanmedian(v7), "p95_7d": np.nanpercentile(v7, 95),
@@ -192,12 +197,14 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
     # --- Acumulado 7 días ---
     acum = float(media.sum())
     u0 = clim.loc[(hoy + pd.Timedelta(days=4)).dayofyear]
-    if acum >= max(u0.p95_7d, 20):
-        est_acum = 2
-    elif acum >= max(2 * u0.p50_7d, 10):
-        est_acum = 1
-    else:
-        est_acum = 0
+    def _clase_semana(v):
+        if v >= max(u0.p95_7d, PISO_SEMANA_MM[1]):
+            return 2
+        return 1 if v >= max(2 * u0.p50_7d, PISO_SEMANA_MM[0]) else 0
+    por_modelo = [_clase_semana(float(lluvia[m].sum())) for m in modelos]
+    est_acum = _clase_semana(acum)
+    if len(por_modelo) > 1 and min(por_modelo) < max(por_modelo) - 1:
+        est_acum = max(por_modelo) - 1  # solo un modelo ve una semana muy lluviosa: baja un nivel
     nivel_lluvia = max(puntaje_lluvia, est_acum)
 
     # --- Suelo: últimos 15 días observados ---
@@ -212,12 +219,16 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
 
     factores = []
     nivel = nivel_lluvia
+    refuerzos = 0
     if nivel_lluvia >= 1 and suelo_humedo:
-        nivel += 1
+        refuerzos += 1
         factores.append("suelo ya húmedo")
     if nivel_lluvia >= 1 and influye_mar and est_mar >= 1:
-        nivel += 1
+        refuerzos += 1
         factores.append("mar cálido frente a la costa")
+    # Suelo húmedo y mar cálido suben como máximo un nivel en total, y nunca convierten una
+    # lluvia solo "más fuerte de lo normal" en "Actuar".
+    nivel = nivel_lluvia + min(refuerzos, 1)
     nivel = min(nivel, 3)
 
     # --- Calor ---

@@ -106,10 +106,10 @@
   }
   function ponerBase() {
     if (capaBase) mapa.removeLayer(capaBase);
-    var estilo = oscuro() ? "dark_nolabels" : "light_nolabels";
-    capaBase = L.tileLayer("https://{s}.basemaps.cartocdn.com/" + estilo + "/{z}/{x}/{y}{r}.png", {
-      subdomains: "abcd", maxZoom: 12, className: "capa-mapa",
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © <a href="https://carto.com/attributions">CARTO</a>',
+    // Mapa de fondo de OpenStreetMap (sin clave). Se pasa a grises con CSS para que no compita con los colores de riesgo.
+    capaBase = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 12, className: "capa-mapa" + (oscuro() ? " capa-mapa-oscura" : ""),
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(mapa);
     capaBase.bringToBack();
   }
@@ -312,7 +312,8 @@
       '<div class="mar-grande"><b>' + signo(m.anom) + " °C</b>" + cambio + "</div>" +
       graficoMar(m.semanas || []) +
       '<p class="sub">' + texto + "</p>" +
-      (m.icen ? '<p class="nota">ICEN aproximado (' + esc(m.icen.mes) + "): " + signo(m.icen.valor) + " °C, " + esc(m.icen.categoria) + ". El oficial lo publica el ENFEN.</p>" : "") +
+      (m.icen ? '<p class="nota">ICEN aproximado (' + esc(m.icen.mes) + "): " + signo(m.icen.valor) + " °C, " + esc(m.icen.categoria) +
+        (m.icen.fuente === "OISST semanal" ? ", estimado con datos semanales" : "") + ". El oficial lo publica el ENFEN.</p>" : "") +
       "</section>";
   }
   function seccionNiveles() {
