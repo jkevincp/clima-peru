@@ -1,0 +1,196 @@
+id,ubigeo,ciudad,provincia,departamento,lat,lon
+prov_0101_chachapoyas,0101,,Chachapoyas,Amazonas,-6.4418,-77.7762
+prov_0102_bagua,0102,,Bagua,Amazonas,-5.0898,-78.3997
+prov_0103_bongara,0103,,Bongara,Amazonas,-5.6804,-77.8733
+prov_0104_condorcanqui,0104,,Condorcanqui,Amazonas,-4.165,-78.0384
+prov_0105_luya,0105,,Luya,Amazonas,-6.3108,-78.0832
+prov_0106_rodriguez_de_mendoza,0106,,Rodriguez De Mendoza,Amazonas,-6.3718,-77.4536
+prov_0107_utcubamba,0107,,Utcubamba,Amazonas,-5.7704,-78.3308
+prov_0201_huaraz,0201,,Huaraz,Ancash,-9.5613,-77.6436
+prov_0202_aija,0202,,Aija,Ancash,-9.7832,-77.6764
+prov_0203_antonio_raymondi,0203,,Antonio Raymondi,Ancash,-9.1326,-77.0534
+prov_0204_asuncion,0204,,Asuncion,Ancash,-9.1909,-77.3985
+prov_0205_bolognesi,0205,,Bolognesi,Ancash,-10.1103,-77.1498
+prov_0206_carhuaz,0206,,Carhuaz,Ancash,-9.2897,-77.5682
+prov_0207_carlos_fermin_fitzcarrald,0207,,Carlos Fermin Fitzcarrald,Ancash,-9.0461,-77.2423
+prov_0208_casma,0208,,Casma,Ancash,-9.4854,-78.1858
+prov_0209_corongo,0209,,Corongo,Ancash,-8.5676,-77.8803
+prov_0210_huari,0210,,Huari,Ancash,-9.4367,-77.0819
+prov_0211_huarmey,0211,,Huarmey,Ancash,-10.095,-77.9271
+prov_0212_huaylas,0212,,Huaylas,Ancash,-8.9427,-77.828
+prov_0213_mariscal_luzuriaga,0213,,Mariscal Luzuriaga,Ancash,-8.868,-77.3382
+prov_0214_ocros,0214,,Ocros,Ancash,-10.4883,-77.4289
+prov_0215_pallasca,0215,,Pallasca,Ancash,-8.3194,-77.9051
+prov_0216_pomabamba,0216,,Pomabamba,Ancash,-8.7176,-77.4352
+prov_0217_recuay,0217,,Recuay,Ancash,-9.9529,-77.424
+prov_0218_santa,0218,,Santa,Ancash,-8.9689,-78.2872
+prov_0219_sihuas,0219,,Sihuas,Ancash,-8.4825,-77.5856
+prov_0220_yungay,0220,,Yungay,Ancash,-9.2032,-77.7432
+prov_0301_abancay,0301,,Abancay,Apurimac,-13.7323,-72.8322
+prov_0302_andahuaylas,0302,,Andahuaylas,Apurimac,-13.8274,-73.3928
+prov_0303_antabamba,0303,,Antabamba,Apurimac,-14.4383,-72.738
+prov_0304_aymaraes,0304,,Aymaraes,Apurimac,-14.3411,-73.248
+prov_0305_cotabambas,0305,,Cotabambas,Apurimac,-14.0187,-72.2682
+prov_0306_chincheros,0306,,Chincheros,Apurimac,-13.4706,-73.6736
+prov_0307_grau,0307,,Grau,Apurimac,-14.0618,-72.62
+prov_0401_arequipa,0401,,Arequipa,Arequipa,-16.3459,-71.5544
+prov_0402_camana,0402,,Camana,Arequipa,-16.4013,-72.8047
+prov_0403_caraveli,0403,,Caraveli,Arequipa,-15.6898,-73.963
+prov_0404_castilla,0404,,Castilla,Arequipa,-15.6058,-72.3236
+prov_0405_caylloma,0405,,Caylloma,Arequipa,-15.6784,-71.6801
+prov_0406_condesuyos,0406,,Condesuyos,Arequipa,-15.5965,-72.7303
+prov_0407_islay,0407,,Islay,Arequipa,-16.9601,-71.7212
+prov_0408_la_union,0408,,La Union,Arequipa,-15.0657,-72.8051
+prov_0501_huamanga,0501,,Huamanga,Ayacucho,-13.2698,-74.2297
+prov_0502_cangallo,0502,,Cangallo,Ayacucho,-13.499,-74.4846
+prov_0503_huanca_sancos,0503,,Huanca Sancos,Ayacucho,-13.9439,-74.4594
+prov_0504_huanta,0504,,Huanta,Ayacucho,-12.5641,-74.1716
+prov_0505_la_mar,0505,,La Mar,Ayacucho,-13.0479,-73.7205
+prov_0506_lucanas,0506,,Lucanas,Ayacucho,-14.6157,-74.3489
+prov_0507_parinacochas,0507,,Parinacochas,Ayacucho,-15.0327,-73.6355
+prov_0508_paucar_del_sara_sara,0508,,Paucar Del Sara Sara,Ayacucho,-15.1241,-73.2633
+prov_0509_sucre,0509,,Sucre,Ayacucho,-14.1211,-73.7304
+prov_0510_victor_fafardo,0510,,Victor Fafardo,Ayacucho,-13.9628,-73.9943
+prov_0511_vilcas_huaman,0511,,Vilcas Huaman,Ayacucho,-13.6542,-73.8971
+prov_0601_cajamarca,0601,,Cajamarca,Cajamarca,-7.1986,-78.4707
+prov_0602_cajabamba,0602,,Cajabamba,Cajamarca,-7.5408,-78.0956
+prov_0603_celendin,0603,,Celendin,Cajamarca,-6.7999,-78.2073
+prov_0604_chota,0604,,Chota,Cajamarca,-6.4351,-78.8713
+prov_0605_contumaza,0605,,Contumaza,Cajamarca,-7.3541,-78.9825
+prov_0606_cutervo,0606,,Cutervo,Cajamarca,-6.1744,-78.8386
+prov_0607_hualgayoc,0607,,Hualgayoc,Cajamarca,-6.7088,-78.5467
+prov_0608_jaen,0608,,Jaen,Cajamarca,-5.7129,-79.0057
+prov_0609_san_ignacio,0609,,San Ignacio,Cajamarca,-5.1242,-78.9439
+prov_0610_san_marcos,0610,,San Marcos,Cajamarca,-7.2837,-78.0632
+prov_0611_san_miguel,0611,,San Miguel,Cajamarca,-6.9772,-78.9966
+prov_0612_san_pablo,0612,,San Pablo,Cajamarca,-7.077,-78.7494
+prov_0613_santa_cruz,0613,,Santa Cruz,Cajamarca,-6.6844,-78.9816
+prov_0701_callao,0701,,Callao,Callao,-11.9427,-77.1266
+prov_0801_cusco,0801,,Cusco,Cusco,-13.5527,-71.9815
+prov_0802_acomayo,0802,,Acomayo,Cusco,-13.9526,-71.6559
+prov_0803_anta,0803,,Anta,Cusco,-13.4898,-72.368
+prov_0804_calca,0804,,Calca,Cusco,-12.9833,-72.0384
+prov_0805_canas,0805,,Canas,Cusco,-14.4393,-71.3434
+prov_0806_canchis,0806,,Canchis,Cusco,-14.0844,-71.1269
+prov_0807_chumbivilcas,0807,,Chumbivilcas,Cusco,-14.4643,-72.0119
+prov_0808_espinar,0808,,Espinar,Cusco,-14.9029,-71.3788
+prov_0809_la_convencion,0809,,La Convencion,Cusco,-12.3506,-72.9225
+prov_0810_paruro,0810,,Paruro,Cusco,-13.8846,-71.9147
+prov_0811_paucartambo,0811,,Paucartambo,Cusco,-13.1544,-71.5274
+prov_0812_quispicanchi,0812,,Quispicanchi,Cusco,-13.5246,-71.0328
+prov_0813_urubamba,0813,,Urubamba,Cusco,-13.2573,-72.2897
+prov_0901_huancavelica,0901,,Huancavelica,Huancavelica,-12.7179,-75.0865
+prov_0902_acobamba,0902,,Acobamba,Huancavelica,-12.7956,-74.5786
+prov_0903_angaraes,0903,,Angaraes,Huancavelica,-13.0469,-74.628
+prov_0904_castrovirreyna,0904,,Castrovirreyna,Huancavelica,-13.1444,-75.4047
+prov_0905_churcampa,0905,,Churcampa,Huancavelica,-12.6158,-74.4893
+prov_0906_huaytara,0906,,Huaytara,Huancavelica,-13.6545,-75.0919
+prov_0907_tayacaja,0907,,Tayacaja,Huancavelica,-12.2453,-74.7691
+prov_1001_huanuco,1001,,Huanuco,Huanuco,-9.7616,-76.1811
+prov_1002_ambo,1002,,Ambo,Huanuco,-10.2279,-76.2369
+prov_1003_dos_de_mayo,1003,,Dos De Mayo,Huanuco,-9.6581,-76.6259
+prov_1004_huacaybamba,1004,,Huacaybamba,Huanuco,-8.9956,-76.8102
+prov_1005_huamalies,1005,,Huamalies,Huanuco,-9.3842,-76.6001
+prov_1006_leoncio_prado,1006,,Leoncio Prado,Huanuco,-9.0541,-76.0364
+prov_1007_maranon,1007,,Marañon,Huanuco,-8.7209,-76.6914
+prov_1008_pachitea,1008,,Pachitea,Huanuco,-10.0493,-75.8902
+prov_1009_puerto_inca,1009,,Puerto Inca,Huanuco,-9.3677,-75.0902
+prov_1010_lauricocha,1010,,Lauricocha,Huanuco,-10.2032,-76.7033
+prov_1011_yarowilca,1011,,Yarowilca,Huanuco,-9.7999,-76.5956
+prov_1101_ica,1101,,Ica,Ica,-14.3011,-75.6432
+prov_1102_chincha,1102,,Chincha,Ica,-13.3186,-75.939
+prov_1103_nazca,1103,,Nazca,Ica,-14.9432,-75.0817
+prov_1104_palpa,1104,,Palpa,Ica,-14.3721,-75.176
+prov_1105_pisco,1105,,Pisco,Ica,-13.805,-75.9426
+prov_1201_huancayo,1201,,Huancayo,Junin,-12.0953,-75.066
+prov_1202_concepcion,1202,,Concepcion,Junin,-11.7657,-75.1307
+prov_1203_chanchamayo,1203,,Chanchamayo,Junin,-11.0295,-75.1318
+prov_1204_jauja,1204,,Jauja,Junin,-11.6871,-75.4923
+prov_1205_junin,1205,,Junin,Junin,-11.0365,-75.9065
+prov_1206_satipo,1206,,Satipo,Junin,-11.5613,-74.1011
+prov_1207_tarma,1207,,Tarma,Junin,-11.2793,-75.6809
+prov_1208_yauli,1208,,Yauli,Junin,-11.4953,-76.1233
+prov_1209_chupaca,1209,,Chupaca,Junin,-12.2073,-75.4328
+prov_1301_trujillo,1301,,Trujillo,La Libertad,-8.0656,-78.8967
+prov_1302_ascope,1302,,Ascope,La Libertad,-7.7258,-79.1518
+prov_1303_bolivar,1303,,Bolivar,La Libertad,-7.2803,-77.7412
+prov_1304_chepen,1304,,Chepen,La Libertad,-7.1431,-79.456
+prov_1305_julcan,1305,,Julcan,La Libertad,-8.1677,-78.4637
+prov_1306_otuzco,1306,,Otuzco,La Libertad,-7.8392,-78.5568
+prov_1307_pacasmayo,1307,,Pacasmayo,La Libertad,-7.4286,-79.4241
+prov_1308_pataz,1308,,Pataz,La Libertad,-8.1414,-77.3255
+prov_1309_sanchez_carrion,1309,,Sanchez Carrion,La Libertad,-7.7916,-77.9077
+prov_1310_santiago_de_chuco,1310,,Santiago De Chuco,La Libertad,-8.1747,-78.1384
+prov_1311_gran_chimu,1311,,Gran Chimu,La Libertad,-7.5802,-78.6492
+prov_1312_viru,1312,,Viru,La Libertad,-8.5203,-78.6027
+prov_1401_chiclayo,1401,,Chiclayo,Lambayeque,-6.8055,-79.5492
+prov_1402_ferrenafe,1402,,Ferreñafe,Lambayeque,-6.369,-79.5262
+prov_1403_lambayeque,1403,,Lambayeque,Lambayeque,-6.1881,-79.9719
+prov_1501_lima,1501,,Lima,Lima,-12.0204,-76.9035
+prov_1502_barranca,1502,,Barranca,Lima,-10.6701,-77.6566
+prov_1503_cajatambo,1503,,Cajatambo,Lima,-10.5183,-77.0351
+prov_1504_canta,1504,,Canta,Lima,-11.5418,-76.708
+prov_1505_canete,1505,,Cañete,Lima,-12.7943,-76.3627
+prov_1506_huaral,1506,,Huaral,Lima,-11.325,-76.9131
+prov_1507_huarochiri,1507,,Huarochiri,Lima,-11.9404,-76.4258
+prov_1508_huaura,1508,,Huaura,Lima,-11.0344,-77.2387
+prov_1509_oyon,1509,,Oyon,Lima,-10.7578,-76.876
+prov_1510_yauyos,1510,,Yauyos,Lima,-12.5156,-75.9016
+prov_1601_maynas,1601,,Maynas,Loreto,-2.5716,-73.4803
+prov_1602_alto_amazonas,1602,,Alto Amazonas,Loreto,-5.3197,-76.1077
+prov_1603_loreto,1603,,Loreto,Loreto,-3.8509,-75.2297
+prov_1604_mariscal_ramon_castilla,1604,,Mariscal Ramon Castilla,Loreto,-3.927,-71.7036
+prov_1605_requena,1605,,Requena,Loreto,-5.9998,-74.0472
+prov_1606_ucayali,1606,,Ucayali,Loreto,-7.3061,-75.3673
+prov_1607_datem_del_maranon,1607,,Datem Del Marañon,Loreto,-4.1361,-76.9777
+prov_1701_tambopata,1701,,Tambopata,Madre De Dios,-12.2009,-70.0468
+prov_1702_manu,1702,,Manu,Madre De Dios,-12.2794,-71.2847
+prov_1703_tahuamanu,1703,,Tahuamanu,Madre De Dios,-11.152,-70.3288
+prov_1801_mariscal_nieto,1801,,Mariscal Nieto,Moquegua,-17.0126,-70.7871
+prov_1802_general_sanchez_cerro,1802,,General Sanchez Cerro,Moquegua,-16.4565,-70.8282
+prov_1803_ilo,1803,,Ilo,Moquegua,-17.5791,-71.209
+prov_1901_pasco,1901,,Pasco,Pasco,-10.7484,-76.1501
+prov_1902_daniel_alcides_carrion,1902,,Daniel Alcides Carrion,Pasco,-10.5085,-76.4812
+prov_1903_oxapampa,1903,,Oxapampa,Pasco,-10.2938,-74.9732
+prov_2001_piura,2001,,Piura,Piura,-5.2092,-80.3882
+prov_2002_ayabaca,2002,,Ayabaca,Piura,-4.7155,-79.8136
+prov_2003_huancabamba,2003,,Huancabamba,Piura,-5.4448,-79.514
+prov_2004_morropon,2004,,Morropon,Piura,-5.2579,-79.9902
+prov_2005_paita,2005,,Paita,Piura,-5.0606,-81.009
+prov_2006_sullana,2006,,Sullana,Piura,-4.5834,-80.6397
+prov_2007_talara,2007,,Talara,Piura,-4.4851,-81.0822
+prov_2008_sechura,2008,,Sechura,Piura,-5.8702,-80.6718
+prov_2101_puno,2101,,Puno,Puno,-16.0821,-70.0781
+prov_2102_azangaro,2102,,Azangaro,Puno,-14.8101,-70.146
+prov_2103_carabaya,2103,,Carabaya,Puno,-13.7911,-70.1799
+prov_2104_chucuito,2104,,Chucuito,Puno,-16.6031,-69.3567
+prov_2105_el_collao,2105,,El Collao,Puno,-16.7273,-69.7557
+prov_2106_huancane,2106,,Huancane,Puno,-15.1176,-69.6069
+prov_2107_lampa,2107,,Lampa,Puno,-15.3846,-70.6412
+prov_2108_melgar,2108,,Melgar,Puno,-14.596,-70.6857
+prov_2109_moho,2109,,Moho,Puno,-15.335,-69.3807
+prov_2110_san_antonio_de_putina,2110,,San Antonio De Putina,Puno,-14.7119,-69.6156
+prov_2111_san_roman,2111,,San Roman,Puno,-15.7009,-70.4229
+prov_2112_sandia,2112,,Sandia,Puno,-13.8508,-69.3253
+prov_2113_yunguyo,2113,,Yunguyo,Puno,-16.2956,-69.0877
+prov_2201_moyobamba,2201,,Moyobamba,San Martin,-5.8973,-77.1262
+prov_2202_bellavista,2202,,Bellavista,San Martin,-7.6385,-76.3193
+prov_2203_el_dorado,2203,,El Dorado,San Martin,-6.5604,-76.746
+prov_2204_huallaga,2204,,Huallaga,San Martin,-6.7657,-76.8954
+prov_2205_lamas,2205,,Lamas,San Martin,-6.2766,-76.4191
+prov_2206_mariscal_caceres,2206,,Mariscal Caceres,San Martin,-7.2745,-77.1841
+prov_2207_picota,2207,,Picota,San Martin,-6.9018,-76.2548
+prov_2208_rioja,2208,,Rioja,San Martin,-5.8626,-77.4659
+prov_2209_san_martin,2209,,San Martin,San Martin,-6.5027,-75.872
+prov_2210_tocache,2210,,Tocache,San Martin,-8.2507,-76.6361
+prov_2301_tacna,2301,,Tacna,Tacna,-17.8923,-70.2215
+prov_2302_candarave,2302,,Candarave,Tacna,-17.1127,-70.3018
+prov_2303_jorge_basadre,2303,,Jorge Basadre,Tacna,-17.5775,-70.7291
+prov_2304_tarata,2304,,Tarata,Tacna,-17.4147,-69.9725
+prov_2401_tumbes,2401,,Tumbes,Tumbes,-3.8062,-80.4334
+prov_2402_contralmirante_villar,2402,,Contralmirante Villar,Tumbes,-3.9698,-80.742
+prov_2403_zarumilla,2403,,Zarumilla,Tumbes,-3.6555,-80.2553
+prov_2501_coronel_portillo,2501,,Coronel Portillo,Ucayali,-8.6707,-74.0593
+prov_2502_atalaya,2502,,Atalaya,Ucayali,-10.3892,-73.2198
+prov_2503_padre_abad,2503,,Padre Abad,Ucayali,-8.7961,-75.4278
+prov_2504_purus,2504,,Purus,Ucayali,-10.3742,-71.5827
