@@ -1,0 +1,64 @@
+id,ubigeo,ciudad,distrito,provincia,departamento,lat,lon
+dist_200101_piura,200101,,Piura,Piura,Piura,-5.0777,-80.6662
+dist_200104_castilla,200104,,Castilla,Piura,Piura,-5.1295,-80.5123
+dist_200105_catacaos,200105,,Catacaos,Piura,Piura,-5.4896,-80.3367
+dist_200107_cura_mori,200107,,Cura Mori,Piura,Piura,-5.3576,-80.5955
+dist_200108_el_tallan,200108,,El Tallan,Piura,Piura,-5.4401,-80.6138
+dist_200109_la_arena,200109,,La Arena,Piura,Piura,-5.3093,-80.7655
+dist_200110_la_union,200110,,La Union,Puira,Piura,-5.323,-80.8619
+dist_200111_las_lomas,200111,,Las Lomas,Piura,Piura,-4.6864,-80.214
+dist_200114_tambo_grande,200114,,Tambo Grande,Piura,Piura,-4.917,-80.3317
+dist_200201_ayabaca,200201,,Ayabaca,Ayabaca,Piura,-4.682,-79.6099
+dist_200202_frias,200202,,Frias,Ayabaca,Piura,-4.9283,-79.9738
+dist_200203_jilili,200203,,Jilili,Ayabaca,Piura,-4.5287,-79.8309
+dist_200204_lagunas,200204,,Lagunas,Ayabaca,Piura,-4.7844,-79.8544
+dist_200205_montero,200205,,Montero,Ayabaca,Piura,-4.6368,-79.8474
+dist_200206_pacaipampa,200206,,Pacaipampa,Ayabaca,Piura,-4.945,-79.6479
+dist_200207_paimas,200207,,Paimas,Ayabaca,Piura,-4.6376,-80.003
+dist_200208_sapillica,200208,,Sapillica,Ayabaca,Piura,-4.7834,-79.9904
+dist_200209_sicchez,200209,,Sicchez,Ayabaca,Piura,-4.5733,-79.7775
+dist_200210_suyo,200210,,Suyo,Ayabaca,Piura,-4.4621,-80.0611
+dist_200301_huancabamba,200301,,Huancabamba,Huancabamba,Piura,-5.1958,-79.4974
+dist_200302_canchaque,200302,,Canchaque,Huancabamba,Piura,-5.3087,-79.6257
+dist_200303_el_carmen_de_la_frontera,200303,,El Carmen De La Frontera,Huancabamba,Piura,-5.0233,-79.3727
+dist_200304_huarmaca,200304,,Huarmaca,Huancabamba,Piura,-5.6983,-79.5592
+dist_200305_lalaquiz,200305,,Lalaquiz,Huancabamba,Piura,-5.1721,-79.6647
+dist_200306_san_miguel_de_el_faique,200306,,San Miguel De El Faique,Huancabamba,Piura,-5.4223,-79.6073
+dist_200307_sondor,200307,,Sondor,Huancabamba,Piura,-5.4071,-79.3616
+dist_200308_sondorillo,200308,,Sondorillo,Huancabamba,Piura,-5.3984,-79.4592
+dist_200401_chulucanas,200401,,Chulucanas,Morropon,Piura,-5.1192,-80.1972
+dist_200402_buenos_aires,200402,,Buenos Aires,Morropon,Piura,-5.264,-79.9254
+dist_200403_chalaco,200403,,Chalaco,Morropon,Piura,-5.0615,-79.7891
+dist_200404_la_matanza,200404,,La Matanza,Morropon,Piura,-5.3699,-80.0807
+dist_200405_morropon,200405,,Morropon,Morropon,Piura,-5.1509,-79.9975
+dist_200406_salitral,200406,,Salitral,Morropon,Piura,-5.438,-79.8242
+dist_200407_san_juan_de_bigote,200407,,San Juan De Bigote,Morropon,Piura,-5.2952,-79.742
+dist_200408_santa_catalina_de_mossa,200408,,Santa Catalina De Mossa,Morropon,Piura,-5.1294,-79.8775
+dist_200409_santo_domingo,200409,,Santo Domingo,Morropon,Piura,-5.0535,-79.9121
+dist_200410_yamango,200410,,Yamango,Morropon,Piura,-5.155,-79.7722
+dist_200501_paita,200501,,Paita,Paita,Piura,-5.1671,-81.0557
+dist_200502_amotape,200502,,Amotape,Paita,Piura,-4.8306,-81.0101
+dist_200503_arenal,200503,,Arenal,Paita,Piura,-4.9022,-81.0184
+dist_200504_colan,200504,,Colan,Paita,Piura,-4.9316,-81.0687
+dist_200505_la_huaca,200505,,La Huaca,Paita,Piura,-5.0651,-80.9147
+dist_200506_tamarindo,200506,,Tamarindo,Paita,Piura,-4.8363,-80.965
+dist_200507_vichayal,200507,,Vichayal,Paita,Piura,-4.8394,-81.1085
+dist_200601_sullana,200601,,Sullana,Sullana,Piura,-4.8036,-80.5241
+dist_200603_ignacio_escudero,200603,,Ignacio Escudero,Sullana,Piura,-4.8273,-80.8862
+dist_200604_lancones,200604,,Lancones,Sullana,Piura,-4.4216,-80.5004
+dist_200605_marcavelica,200605,,Marcavelica,Sullana,Piura,-4.5389,-80.7829
+dist_200606_miguel_checa,200606,,Miguel Checa,Sullana,Piura,-5.0475,-80.7888
+dist_200607_querecotillo,200607,,Querecotillo,Sullana,Piura,-4.727,-80.6046
+dist_200608_salitral,200608,,Salitral,Sullana,Piura,-4.847,-80.6801
+dist_200701_parinas,200701,,Pariñas,Talara,Piura,-4.4996,-81.0465
+dist_200702_el_alto,200702,,El Alto,Talara,Piura,-4.2908,-81.0789
+dist_200703_la_brea,200703,,La Brea,Talara,Piura,-4.7036,-81.1079
+dist_200704_lobitos,200704,,Lobitos,Talara,Piura,-4.4017,-81.2031
+dist_200705_los_organos,200705,,Los Organos,Talara,Piura,-4.1945,-81.065
+dist_200706_mancora,200706,,Mancora,Talara,Piura,-4.1461,-81.0092
+dist_200801_sechura,200801,,Sechura,Sechura,Piura,-5.9194,-80.6602
+dist_200802_bellavista_de_la_union,200802,,Bellavista De La Union,Sechura,Piura,-5.4289,-80.743
+dist_200803_bernal,200803,,Bernal,Sechura,Piura,-5.4597,-80.7008
+dist_200804_cristo_nos_valga,200804,,Cristo Nos Valga,Sechura,Piura,-5.5355,-80.6418
+dist_200805_vice,200805,,Vice,Sechura,Piura,-5.4244,-80.8758
+dist_200806_rinconada_llicuar,200806,,Rinconada Llicuar,Sechura,Piura,-5.4791,-80.7707
