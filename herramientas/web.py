@@ -86,7 +86,10 @@ def _ultimo_pronostico():
         return pd.DataFrame(), None
     df = pd.concat(pd.read_parquet(a) for a in archivos)
     emision = df.fecha_emision.max()
-    return df[df.fecha_emision == emision], emision
+    # cada lugar usa su pronóstico más reciente (si una corrida no alcanzó a bajarlos todos), con hasta 1 día de antigüedad
+    ultima = df.groupby("punto_id")["fecha_emision"].transform("max")
+    df = df[(df.fecha_emision == ultima) & (ultima >= emision - pd.Timedelta(days=1))]
+    return df, emision
 
 
 def _horario_campo(emision):
@@ -153,6 +156,11 @@ def exportar(cfg, demo=False):
     matrices = _matrices(emision)
     ahora_h, ahora_c = _ahora()
     campo, et0 = _horario_campo(emision), _et0(pron)
+    semana = {}
+    if len(pron):
+        x = pron[(pron.variable == "precipitation_sum") & pron.plazo_dias.between(1, 7)]
+        semana = {pid: round(float(v), 1) for pid, v in
+                  x.groupby(["punto_id", "fecha_objetivo"])["valor"].mean().groupby("punto_id").sum().items()}
     if SITIO.exists():
         shutil.rmtree(SITIO)
     shutil.copytree(WEB, SITIO)
@@ -174,11 +182,12 @@ def exportar(cfg, demo=False):
                                 f"({anios:.0f} de {pd.Timestamp.today().year - 1979} años). El nivel de riesgo "
                                 f"aparecerá cuando haya al menos {MIN_DIAS_HISTORIA // 365} años.",
                       acciones=criterios.ACCIONES[0])
+            ev["lluvia_7d_mm"] = semana.get(p["id"])
             ev["hoy"] = hoy_mod.resumir(ahora_h.get(p["id"]), ahora_c.get(p["id"]))
             ev["campo"] = {"horario": campo.get(p["id"]), "et0": et0.get(p["id"], {})}
             _json(SITIO / "data" / "puntos" / f"{p['id']}.json", ev)
             resumen.append({k: ev.get(k) for k in ("id", "nombre", "provincia", "departamento", "lat", "lon",
-                                                    "nivel", "veredicto")})
+                                                    "nivel", "veredicto", "lluvia_7d_mm")})
             if ev["hoy"]:
                 resumen[-1]["hoy"] = {k: ev["hoy"][k] for k in ("estado", "hasta_ahora_mm", "resto_mm", "descripcion")}
             continue
@@ -208,4 +217,9 @@ def exportar(cfg, demo=False):
         "puntos": resumen,
     })
     _json(SITIO / "data" / "departamentos.json", _departamentos())
+    try:
+        from herramientas import zonas
+        _json(SITIO / "data" / "zonas.json", zonas.generar(cfg, cargar_puntos(cfg)))
+    except Exception as e:  # el mapa funciona igual sin las zonas de lluvia
+        log.warning("No se pudieron generar las zonas de lluvia: %s", e)
     log.info("Sitio generado en %s con %s lugares", SITIO, len(resumen))

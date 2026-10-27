@@ -11,7 +11,7 @@
   ];
   var DIAS_LARGO = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
   var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-  var estado = { resumen: null, deps: null, cache: {}, seleccion: null, dep: null, verTodos: false };
+  var estado = { hoyAbierto: {}, resumen: null, deps: null, cache: {}, seleccion: null, dep: null, verTodos: false };
   var mapa, capaDeps, capaPuntos, capaBase, capaEtiquetas, capaLluvia, capaToque, marcadores = {}, etiquetas = {}, anillos = {}, toques = {};
   var ESTADO_HOY = { lloviendo: "Lloviendo ahora", llovio: "Llovió hoy", llovera: "Lloverá más tarde", seco: "Sin lluvia hoy" };
   var panel = document.getElementById("panel");
@@ -82,7 +82,8 @@
     marcadores = {}; anillos = {}; toques = {};
     var orden = estado.resumen.puntos.slice().sort(function (a, b) { return (a.nivel || 0) - (b.nivel || 0); });
     orden.forEach(function (p) {
-      if (p.hoy && p.hoy.estado !== "seco") {
+      var conAnillo = !window.Capas || ["riesgo", "hoy"].indexOf(window.Capas.modo()) >= 0;
+      if (conAnillo && p.hoy && p.hoy.estado !== "seco") {
         anillos[p.id] = L.circleMarker([p.lat, p.lon], Object.assign({ pane: "lluvia", interactive: false }, estiloAnillo(p.hoy.estado))).addTo(capaLluvia);
       }
       // el punto visible no recibe clics; los recibe un círculo invisible más grande (más fácil de tocar)
@@ -156,14 +157,19 @@
     return n;
   }
   function estiloDep(f) {
-    var n = peorNivelDep(f.properties.nombre);
+    var n = modoLluvia() ? -1 : peorNivelDep(f.properties.nombre);
     var activo = estado.dep === f.properties.nombre;
     return {
       color: activo ? css("--acento") : css("--tinta-3"), weight: activo ? 2 : 0.8, opacity: activo ? 1 : 0.6,
       fillColor: n >= 1 ? colorNivel(n) : css("--tierra"), fillOpacity: n >= 1 ? 0.2 : 0.55,
     };
   }
+  function modoLluvia() { return window.Capas && window.Capas.modo() !== "riesgo"; }
   function estiloPunto(p, sel) {
+    if (modoLluvia()) {  // en los mapas de lluvia los puntos se vuelven discretos para no competir con el color de las zonas
+      return { radius: sel ? 8 : 3.5, color: sel ? css("--tinta") : css("--tinta-2"), weight: sel ? 3 : 1,
+        fillColor: css("--superficie"), fillOpacity: 1, opacity: 1 };
+    }
     return {
       radius: sel ? 10 : (p.nivel >= 2 ? 7 : 6), color: sel ? css("--tinta") : css("--superficie"), weight: sel ? 3 : 1.5,
       fillColor: colorNivel(p.nivel), fillOpacity: 1, opacity: 1,
@@ -179,11 +185,13 @@
     });
     marcarEtiquetas();
     pintarLeyenda();
+    if (window.Capas) window.Capas.repintar();
     if (estado.seleccion && estado.cache[estado.seleccion]) mostrarPunto(estado.cache[estado.seleccion], false);
     else mostrarResumen();
   }
 
   function pintarLeyenda() {
+    if (window.Capas && window.Capas.leyenda()) return;
     var conteo = [0, 0, 0, 0];
     estado.resumen.puntos.forEach(function (p) { if (p.nivel != null) conteo[p.nivel]++; });
     document.getElementById("leyenda").innerHTML = '<div class="leyenda-titulo">Próximos 7 días</div>' +
@@ -267,16 +275,38 @@
     var total = grupos.lloviendo.length + grupos.llovio.length + grupos.llovera.length;
     var h = '<section class="seccion"><div class="hoy-cabeza"><h3>Hoy</h3><span class="nota">' + horaConsulta() + "</span></div>";
     if (!total) return h + '<p class="vacio">Sin lluvia hoy en ' + (estado.dep ? esc(estado.dep) : "los lugares vigilados") + ".</p></section>";
+    var nacional = !estado.dep;
     ["lloviendo", "llovio", "llovera"].forEach(function (k) {
       if (!grupos[k].length) return;
-      grupos[k].sort(function (a, b) { return (b.hoy.hasta_ahora_mm + b.hoy.resto_mm) - (a.hoy.hasta_ahora_mm + a.hoy.resto_mm); });
-      var max = 12;
+      var mmDe = function (p) { return k === "llovera" ? p.hoy.resto_mm : p.hoy.hasta_ahora_mm; };
+      var items;
+      if (nacional) {
+        // Vista nacional: un chip por departamento (cuántos lugares y el mayor acumulado); al tocarlo se abre el departamento
+        var porDep = {};
+        grupos[k].forEach(function (p) {
+          var d = porDep[p.departamento] || (porDep[p.departamento] = { nombre: p.departamento, n: 0, max: 0 });
+          d.n++; d.max = Math.max(d.max, mmDe(p));
+        });
+        items = Object.keys(porDep).map(function (n) { return porDep[n]; }).sort(function (a, b) { return b.n - a.n || b.max - a.max; })
+          .map(function (d) {
+            return '<button class="chip" type="button" data-dep="' + esc(d.nombre) + '" title="Ver ' + esc(d.nombre) + '">' + esc(d.nombre) +
+              ' <span class="num">' + d.n + (d.n === 1 ? " lugar" : " lugares") + " · hasta " + d.max.toFixed(1) + " mm</span></button>";
+          });
+      } else {
+        grupos[k].sort(function (a, b) { return (b.hoy.hasta_ahora_mm + b.hoy.resto_mm) - (a.hoy.hasta_ahora_mm + a.hoy.resto_mm); });
+        items = grupos[k].map(function (p) {
+          return '<button class="chip" type="button" data-id="' + esc(p.id) + '">' + esc(p.nombre) + ' <span class="num">' + mmDe(p).toFixed(1) + " mm</span></button>";
+        });
+      }
+      var max = 12, abierto = estado.hoyAbierto[k];
+      var visibles = abierto ? items : items.slice(0, max);
+      var boton = items.length > max
+        ? '<button class="chip chip-mas" type="button" data-accion="hoy-mas" data-grupo="' + k + '" aria-expanded="' + (abierto ? "true" : "false") + '">' +
+          (abierto ? "Ver menos" : "Ver " + (items.length - max) + " más") + "</button>"
+        : "";
       h += '<div class="hoy-grupo"><p class="hoy-grupo-titulo"><span class="anillo' + (k === "llovera" ? " anillo-luego" : "") + '"></span>' +
-        ESTADO_HOY[k] + ' <span class="nota">(' + grupos[k].length + ')</span></p><div class="chips">' +
-        grupos[k].slice(0, max).map(function (p) {
-          var mm = k === "llovera" ? p.hoy.resto_mm : p.hoy.hasta_ahora_mm;
-          return '<button class="chip" type="button" data-id="' + esc(p.id) + '">' + esc(p.nombre) + ' <span class="num">' + mm.toFixed(1) + " mm</span></button>";
-        }).join("") + (grupos[k].length > max ? '<span class="nota">y ' + (grupos[k].length - max) + " más</span>" : "") + "</div></div>";
+        ESTADO_HOY[k] + ' <span class="nota">(' + grupos[k].length + (nacional ? " lugares" : "") + ')</span></p><div class="chips">' +
+        visibles.join("") + boton + "</div></div>";
     });
     return h + '<p class="nota">Lluvia estimada por los modelos hora a hora. Una llovizna muy local puede no aparecer.</p></section>';
   }
@@ -284,7 +314,7 @@
     var c = estado.resumen.hoy_consultado;
     if (!c) return "";
     var t = c.replace(" ", "T").slice(0, 16);
-    return "Actualizado " + t.slice(11, 16) + " h";
+    return (window.Vivo && window.Vivo.consultado() ? '<span class="en-vivo">En vivo</span> ' : "Actualizado ") + t.slice(11, 16) + " h";
   }
   function filaLugar(p) {
     var c = p.nivel == null ? "var(--tinta-3)" : "var(--n" + p.nivel + ")";
@@ -348,6 +378,7 @@
     if (!silencioso) panel.innerHTML = '<div class="cargando">Cargando ' + esc(p ? p.nombre : id) + "…</div>";
     cargar("data/puntos/" + encodeURIComponent(id) + ".json?v=" + encodeURIComponent(estado.resumen.generado || "")).then(function (d) {
       estado.cache[id] = d;
+      if (window.Vivo && window.Vivo.de(id)) d.hoy = window.Vivo.de(id);
       if (estado.seleccion === id) {
         var arriba = panel.scrollTop;
         mostrarPunto(d, !silencioso);
@@ -458,7 +489,7 @@
     var cls = x.estado === "seco" ? "hoy-seco" : "hoy-lluvia";
     return '<div class="hoy ' + cls + '">' +
       '<div class="hoy-cabeza"><span class="eyebrow">Hoy, ' + DIAS_LARGO[f.getDay()].toLowerCase() + " " + f.getDate() + "</span>" +
-      '<span class="nota">Actualizado ' + x.consultado.slice(11, 16) + " h</span></div>" +
+      '<span class="nota">' + (x.vivo ? '<span class="en-vivo">En vivo</span> ' : "Actualizado ") + x.consultado.slice(11, 16) + " h</span></div>" +
       '<p class="hoy-estado">' + (x.estado !== "seco" ? '<span class="anillo' + (x.estado === "llovera" ? " anillo-luego" : "") + '"></span>' : "") +
       esc(ESTADO_HOY[x.estado]) + (x.temperatura != null ? ' <span class="hoy-temp num">' + Math.round(x.temperatura) + " °C</span>" : "") + "</p>" +
       '<p class="hoy-texto">' + esc(x.texto) + "</p>" + (x.estado !== "seco" ? graficoHoy(x) : "") + "</div>";
@@ -599,7 +630,7 @@
 
   // ---------- navegación ----------
   function elegirDep(nombre, limites) {
-    estado.dep = nombre; estado.verTodos = false; quitarSeleccion();
+    estado.dep = nombre; estado.verTodos = false; estado.hoyAbierto = {}; quitarSeleccion();
     capaDeps.setStyle(estiloDep); marcarEtiquetas();
     if (limites) mapa.fitBounds(limites, { padding: [30, 30], maxZoom: 8 });
     mostrarResumen(); panel.scrollTop = 0;
@@ -610,19 +641,28 @@
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
   }
   function volverPais() {
-    estado.dep = null; estado.verTodos = false; quitarSeleccion();
+    estado.dep = null; estado.verTodos = false; estado.hoyAbierto = {}; quitarSeleccion();
     capaDeps.setStyle(estiloDep); marcarEtiquetas();
     mapa.fitBounds([[-18.4, -81.4], [-0.1, -68.6]], { padding: [10, 10] });
     mostrarResumen(); panel.scrollTop = 0;
   }
   panel.addEventListener("click", function (e) {
-    var b = e.target.closest("[data-id],[data-accion]");
+    var b = e.target.closest("[data-id],[data-accion],[data-dep]");
     if (!b) return;
+    if (b.dataset.dep) {
+      var f = estado.deps.features.find(function (x) { return x.properties.nombre === b.dataset.dep; });
+      return elegirDep(b.dataset.dep, f && f._capa ? f._capa.getBounds() : null);
+    }
     if (b.dataset.id) return seleccionar(b.dataset.id);
     var a = b.dataset.accion;
     if (a === "pais") volverPais();
     else if (a === "dep") { quitarSeleccion(); mostrarResumen(); panel.scrollTop = 0; }
     else if (a === "todos") { estado.verTodos = true; mostrarResumen(); }
+    else if (a === "hoy-mas") {
+      var g = b.dataset.grupo, arriba = panel.scrollTop;
+      estado.hoyAbierto[g] = !estado.hoyAbierto[g]; mostrarResumen(); panel.scrollTop = arriba;
+      var foco = panel.querySelector('[data-accion="hoy-mas"][data-grupo="' + g + '"]'); if (foco) foco.focus();
+    }
   });
   function prepararBusqueda() {
     var dl = document.getElementById("lugares"), indice = {};
@@ -654,17 +694,48 @@
     var el = document.getElementById("actualizado");
     var g = estado.resumen && estado.resumen.generado;
     if (!el || !g) return;
-    var t = new Date(g), min = Math.max(0, Math.round((Date.now() - t) / 60000));
-    var rel = min < 1 ? "hace un momento" : min < 60 ? "hace " + min + " min" : min < 1440 ? "hace " + Math.round(min / 60) + " h" : "hace " + Math.round(min / 1440) + " d";
-    el.textContent = "Actualizado " + rel;
-    el.title = "Datos generados el " + t.toLocaleString("es-PE", { dateStyle: "medium", timeStyle: "short" });
-    el.classList.toggle("viejo", min > 180);
+    function hace(t) {
+      var min = Math.max(0, Math.round((Date.now() - t) / 60000));
+      return { min: min, txt: min < 1 ? "hace un momento" : min < 60 ? "hace " + min + " min" : min < 1440 ? "hace " + Math.round(min / 60) + " h" : "hace " + Math.round(min / 1440) + " d" };
+    }
+    var t = new Date(g), pron = hace(t), vivo = window.Vivo && window.Vivo.consultado();
+    var fmt = function (x) { return x.toLocaleString("es-PE", { dateStyle: "medium", timeStyle: "short" }); };
+    if (vivo) {
+      el.textContent = "Hoy en vivo · " + hace(vivo).txt;
+      el.title = "La lluvia de hoy se consulta cada 30 minutos (" + fmt(vivo) + "). Pronóstico y niveles: " + fmt(t) + ".";
+      el.classList.toggle("viejo", false);
+    } else {
+      el.textContent = "Actualizado " + pron.txt;
+      el.title = "Datos generados el " + fmt(t);
+      el.classList.toggle("viejo", pron.min > 180);
+    }
+  }
+  // "Hoy" en vivo (vivo.js): se mezcla con lo publicado y se vuelve a dibujar sin perder lo que se está viendo
+  function aplicarVivo() {
+    if (!window.Vivo || !estado.resumen) return;
+    var ultimo = null;
+    estado.resumen.puntos.forEach(function (p) {
+      var v = window.Vivo.de(p.id);
+      if (!v) return;
+      p.hoy = { estado: v.estado, hasta_ahora_mm: v.hasta_ahora_mm, resto_mm: v.resto_mm, descripcion: v.descripcion };
+      if (estado.cache[p.id]) estado.cache[p.id].hoy = v;
+      if (!ultimo || v.consultado > ultimo) ultimo = v.consultado;
+    });
+    if (!ultimo) return;
+    estado.resumen.hoy_consultado = ultimo;
+    crearPuntos(); pintarLeyenda(); pintarActualizado();
+    if (window.Capas) window.Capas.repintar();
+    var arriba = panel.scrollTop;
+    if (estado.seleccion && estado.cache[estado.seleccion]) mostrarPunto(estado.cache[estado.seleccion], false); else mostrarResumen();
+    panel.scrollTop = arriba;
   }
   function aplicarResumen(r) {
     estado.resumen = r; estado.cache = {};
     crearPuntos(); capaDeps.setStyle(estiloDep); marcarEtiquetas(); pintarLeyenda(); pintarMar(); pintarActualizado();
+    if (window.Capas) window.Capas.repintar();
     if (estado.seleccion && buscarResumen(estado.seleccion)) seleccionar(estado.seleccion, true, true);
     else { var arriba = panel.scrollTop; mostrarResumen(); panel.scrollTop = arriba; }
+    aplicarVivo();
     var aviso = document.getElementById("aviso-nuevo");
     aviso.hidden = false; clearTimeout(aviso._t); aviso._t = setTimeout(function () { aviso.hidden = true; }, 6000);
   }
@@ -704,6 +775,22 @@
     estado.resumen = r[0]; estado.deps = r[1];
     document.getElementById("aviso-demo").hidden = !estado.resumen.demo;
     iniciarMapa(); pintarLeyenda(); pintarMar(); prepararBusqueda(); iniciarActualizacion(); iniciarAmpliar();
+    if (window.Capas) window.Capas.iniciar({
+      mapa: mapa, resumen: function () { return estado.resumen; },
+      alSeleccionar: function (z) {  // tocar una zona abre su lugar con más lluvia
+        var mejor = null;
+        (z.puntos || []).forEach(function (id) {
+          var p = buscarResumen(id); if (!p) return;
+          var v = window.Capas.modo() === "hoy" ? (p.hoy ? p.hoy.hasta_ahora_mm + p.hoy.resto_mm : 0) : (p.lluvia_7d_mm || 0);
+          if (!mejor || v > mejor.v) mejor = { id: id, v: v };
+        });
+        if (mejor) seleccionar(mejor.id);
+      },
+      alCambiar: function () {
+        capaDeps.setStyle(estiloDep); marcarEtiquetas(); crearPuntos(); pintarLeyenda();
+      },
+    });
+    if (window.Vivo) window.Vivo.iniciar({ puntos: estado.resumen.puntos, alActualizar: aplicarVivo });
     if (window.Campo) window.Campo.iniciar({ alCambiar: function () {
       if (estado.seleccion && estado.cache[estado.seleccion]) { var arriba = panel.scrollTop; mostrarPunto(estado.cache[estado.seleccion], false); panel.scrollTop = arriba; }
     } });

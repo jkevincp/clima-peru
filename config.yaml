@@ -4,10 +4,10 @@
 fecha_inicio: "1980-01-01"
 zona_horaria: "America/Lima"
 
-# Puntos a monitorear (piloto: región Piura, una ciudad por provincia).
+# Puntos a monitorear: ciudades elegidas a mano (abajo) + centro de cada provincia del Perú + distritos de Piura.
 # Para cubrir todo el Perú, pon true: se agrega un punto en el centro de cada una de las 195 provincias
 # (la lista se genera sola la primera vez en datos/puntos_provincias.csv).
-usar_puntos_provincias_csv: false
+usar_puntos_provincias_csv: true
 
 # Además, un punto por cada distrito de estos departamentos (por ejemplo [Piura]; vacío = ninguno).
 # Los distritos cuyo centro queda a menos de 8 km de una ciudad ya vigilada no se repiten.
@@ -55,3 +55,4 @@ chirps:
   activo: true
   resolucion: p25          # p25 = 0.25° (~27 km, ~50-100 MB por año). p05 = 0.05° (~5 km, >1 GB por año)
   dia_actualizacion: 0     # en la corrida diaria solo se revisa los lunes (0=lunes); publica con ~3 semanas de retraso
+  max_anios_por_corrida: 4 # con lugares nuevos se completan de a pocos años por día, para no demorar el mapa

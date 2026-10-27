@@ -61,6 +61,13 @@ def actualizar(cfg, puntos, s, forzar=False):
     if hoy.year in pendientes and len(pendientes) == 1 and hoy.weekday() != c["dia_actualizacion"] and not forzar:
         log.info("CHIRPS al día; el año en curso se refresca los días %s", c["dia_actualizacion"])
         return
+    # Tope de archivos por corrida: con lugares nuevos faltan todos los años, y bajarlos de una vez
+    # (≈46 archivos) retrasaría horas la publicación del mapa. Lo que falte sigue en las próximas corridas.
+    tope = int(c.get("max_anios_por_corrida", 4))
+    if len(pendientes) > tope:
+        log.info("CHIRPS: faltan %s años; se bajan %s en esta corrida", len(pendientes), tope)
+        # años completos más recientes primero; el año en curso se deja para cuando sea lo único pendiente
+        pendientes = sorted([a for a in pendientes if a != hoy.year], reverse=True)[:tope]
     TMP.mkdir(parents=True, exist_ok=True)
     for anio in pendientes:
         url = URL.format(res=c["resolucion"], anio=anio)

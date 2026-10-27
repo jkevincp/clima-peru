@@ -442,3 +442,41 @@ body.con-modal { overflow: hidden; }
   .modal-caja { border-radius: 14px 14px 0 0; max-height: 92vh; }
   .modal-pie { padding-bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
 }
+
+/* ---------- Hoy en vivo ---------- */
+.en-vivo { display: inline-flex; align-items: center; gap: 5px; color: var(--n0); font-weight: 600; }
+.en-vivo::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--n0); animation: latido-vivo 2s ease-in-out infinite; }
+@keyframes latido-vivo { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .en-vivo::before { animation: none; } }
+.chip-mas { border-style: dashed; color: var(--acento); font-weight: 600; }
+.chip-mas:hover { border-style: solid; }
+.chip[data-dep] { background: var(--superficie-2); }
+
+/* ---------- Capas: riesgo / lluvia / satélite ---------- */
+:root { --ll1: #d4e6f8; --ll2: #9fc8ef; --ll3: #5c9fdc; --ll4: #2f6fc0; --ll5: #2c459c; --ll6: #4a2a7f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ll1: #1d3550; --ll2: #23507e; --ll3: #2f6fb0; --ll4: #4f8fd8; --ll5: #8db4f0; --ll6: #c7a8f5; } }
+:root[data-theme="dark"] { --ll1: #1d3550; --ll2: #23507e; --ll3: #2f6fb0; --ll4: #4f8fd8; --ll5: #8db4f0; --ll6: #c7a8f5; }
+.capas {
+  position: absolute; z-index: 950; top: 12px; left: max(12px, env(safe-area-inset-left, 0px));
+  display: flex; gap: 2px; padding: 3px; max-width: calc(100% - 150px); overflow-x: auto;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: 10px; box-shadow: var(--sombra);
+}
+.capa-op { flex: none; padding: 6px 11px; border: 0; border-radius: 7px; background: none; color: var(--tinta-2); font-size: .82rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.capa-op:hover { color: var(--tinta); background: var(--superficie-2); }
+.capa-op.activo { background: var(--tinta); color: var(--superficie); }
+.caja-ll { width: 18px; height: 11px; border-radius: 2px; flex: none; border: 1px solid var(--linea); }
+.leyenda-nota { max-width: 190px; font-size: .74rem; color: var(--tinta-2); line-height: 1.35; }
+.leyenda-fila { font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) {
+  .capas { max-width: calc(100% - 150px); }
+  .capa-op { padding: 6px 9px; font-size: .78rem; }
+  /* leyenda compacta y horizontal para no tapar el mapa */
+  .leyenda { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 2px 10px; padding: 6px 9px;
+    max-width: calc(100% - 80px); bottom: 8px; font-size: .72rem; }
+  .leyenda-titulo { width: 100%; margin: 0; font-size: .62rem; }
+  .leyenda-titulo.leyenda-sep { margin-top: 2px; }
+  .leyenda-nota { display: none; }
+  .leyenda .punto { width: 9px; height: 9px; }
+  .leyenda .anillo { width: 10px; height: 10px; }
+  .caja-ll { width: 12px; height: 9px; }
+}
