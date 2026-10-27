@@ -37,7 +37,28 @@ def cargar_puntos(cfg):
         extra = pd.read_csv(csv, dtype={"ubigeo": str}, keep_default_na=False).to_dict("records")
         puntos += [p for p in extra if p["id"] not in ids
                    and (_norm(p["provincia"]), _norm(p["departamento"])) not in cubiertas]
+    deps = [d for d in (cfg.get("distritos_de") or []) if d]
+    if deps:
+        csv_d = DATOS / "puntos_distritos.csv"
+        actual = pd.read_csv(csv_d, dtype={"ubigeo": str}, keep_default_na=False) if csv_d.exists() else None
+        if actual is None or {_norm(d) for d in actual["departamento"]} != {_norm(d) for d in deps}:
+            from herramientas.puntos import generar_distritos
+            actual = generar_distritos(sesion(), deps)
+        # un distrito no se repite si ya hay una ciudad con su nombre o un lugar a menos de 8 km de su centro
+        nombres = {_norm(q.get("ciudad")).replace(" ", "") for q in puntos if q.get("ciudad")}
+        for p in actual.to_dict("records"):
+            if _norm(p["distrito"]).replace(" ", "") in nombres:
+                continue
+            if all(_km(p, q) >= 8 for q in puntos):
+                puntos.append(p)
     return puntos
+
+
+def _km(a, b):
+    import math
+    la1, lo1, la2, lo2 = map(math.radians, (a["lat"], a["lon"], b["lat"], b["lon"]))
+    h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+    return 6371 * 2 * math.asin(math.sqrt(h))
 
 
 def _norm(t):

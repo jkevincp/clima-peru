@@ -17,6 +17,10 @@
         <p class="marca-sub">Riesgo a 7 días · <span id="actualizado">Perú</span></p>
       </div>
     </div>
+    <button class="cultivo-chip" id="mi-cultivo" type="button" aria-haspopup="dialog" aria-controls="modal-cultivo">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17V9M10 9c0-3 2-5.5 6-6-0.3 4-2.6 6-6 6Zm0 2C10 8 8.2 6 4.5 5.6 4.7 9 6.8 11 10 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="mi-cultivo-texto">Mi cultivo</span>
+    </button>
     <button class="mar-chip" id="mar-chip" type="button" aria-label="Ver el estado del mar frente a la costa">
       <span class="mar-chip-label">Mar Niño 1+2</span>
       <span class="mar-chip-valor" id="mar-chip-valor">—</span>
@@ -33,7 +37,11 @@
 
   <div class="aviso-nuevo" id="aviso-nuevo" role="status" hidden>Datos actualizados</div>
 
-  <main class="cuerpo">
+  <main class="cuerpo" id="cuerpo">
+    <button class="ampliar" id="ampliar" type="button" aria-controls="panel" aria-pressed="false" title="Ampliar el panel">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.5 3.5 5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="ampliar-texto">Ampliar</span>
+    </button>
     <section class="mapa-caja" aria-label="Mapa">
       <div id="mapa"></div>
       <div class="leyenda" id="leyenda" aria-label="Niveles"></div>
@@ -44,5 +52,26 @@
   </main>
 </div>
 
+<div class="modal" id="modal-cultivo" role="dialog" aria-modal="true" aria-labelledby="modal-cultivo-titulo" hidden>
+  <div class="modal-caja">
+    <div class="modal-cabeza">
+      <div>
+        <h2 id="modal-cultivo-titulo">Mi cultivo</h2>
+        <p class="sub">Se guarda en este navegador y se aplica a todos los lugares del mapa.</p>
+      </div>
+      <button class="modal-cerrar" type="button" data-campo="cerrar" aria-label="Cerrar">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-cuerpo" id="modal-cultivo-cuerpo"></div>
+    <div class="modal-pie">
+      <button class="enlace peligro" id="modal-quitar" type="button" hidden>Quitar cultivo</button>
+      <button class="boton" id="modal-guardar" type="button" disabled>Guardar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="cultivos.js"></script>
+<script src="campo.js"></script>
 <script src="app.js"></script>

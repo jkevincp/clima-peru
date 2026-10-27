@@ -65,6 +65,8 @@ En el gráfico, los picos de lluvia en Piura deben coincidir con 1983, 1998, 201
 - Nombres de departamento en el mapa: al tocarlos, el panel muestra lo más importante de ese departamento y la lista de sus lugares.
 - Horarios de referencia: para cada día con lluvia, la franja que concentra el 75 % de la lluvia, la hora más intensa, si ECMWF y GFS coinciden y la certeza según el plazo (alta a 1–2 días, media a 3–4, baja a 5–7).
 
+- **Mi cultivo** (botón en la cabecera): el usuario elige su cultivo y su etapa, y cada lugar muestra el agua que necesitará esta semana (Kc × ET0 − lluvia útil, en mm y m³/ha), el riesgo de hongos, las ventanas para aplicar, el frío para inducir floración, y el calor o frío que dañan en esa etapa. Los valores de referencia y sus fuentes están en `web/cultivos.js`; donde no hay una fuente confiable el valor queda vacío. En "Avanzado" el técnico puede poner sus propios valores. Se guarda en el navegador de cada persona (sin cuentas ni servidor). Para agregar un cultivo, copia un bloque en `web/cultivos.js`.
+
 Las reglas que deciden cada nivel están explicadas al inicio de `herramientas/criterios.py`, y las de los horarios en `fuentes/horas.py`. Son ajustables y son el punto de partida antes de entrenar modelos.
 
 ## ¿Qué modelo predice?

@@ -86,7 +86,9 @@ def combinar(por_modelo, plazo):
     for a, b, nombre in FRANJAS:
         if inicio < b and fin > a:
             franjas.append(nombre)
-    texto = f"entre las {_hora(inicio)} y las {_hora(fin)}" if fin - inicio > 1 else f"cerca de las {_hora(inicio)}"
+    def _las(h):
+        return "la medianoche" if h in (0, 24) else f"las {_hora(h)}"
+    texto = f"entre {_las(inicio)} y {_las(fin)}" if fin - inicio > 1 else f"cerca de {_las(inicio)}"
     return {"inicio": inicio, "fin": fin, "pico": pico, "franja": " y ".join(franjas[:2]) if len(franjas) <= 2 else "casi todo el día",
             "texto": texto, "corto": f"{inicio}–{fin} h", "acuerdo": acuerdo, "certeza": certeza(plazo),
             "por_modelo": {m: {"inicio": w["inicio"], "fin": w["fin"], "pico": w["pico"]} for m, w in ws.items()}}

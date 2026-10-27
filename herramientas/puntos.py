@@ -45,3 +45,28 @@ def generar(s):
     df.to_csv(DATOS / "puntos_provincias.csv", index=False)
     log.info("Generados %s puntos de provincia en datos/puntos_provincias.csv", len(df))
     return df
+
+
+URL_DISTRITOS = "https://raw.githubusercontent.com/juaneladio/peru-geojson/master/peru_distrital_simple.geojson"
+
+
+def generar_distritos(s, departamentos):
+    """Un punto por distrito de los departamentos elegidos. Salida: datos/puntos_distritos.csv"""
+    quiero = {_slug(d) for d in departamentos}
+    gj = get(s, URL_DISTRITOS).json()
+    filas = []
+    for f in gj["features"]:
+        g, pr = f["geometry"], f["properties"]
+        if _slug(pr.get("NOMBDEP", "")) not in quiero or not g:  # algunos distritos vienen sin geometría
+            continue
+        poligonos = g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]
+        lon, lat, _ = max((_centroide([tuple(c[:2]) for c in pol[0]]) for pol in poligonos), key=lambda t: t[2])
+        dist = pr["NOMBDIST"].title()
+        filas.append({"id": f"dist_{pr['IDDIST']}_{_slug(dist)}", "ubigeo": pr["IDDIST"], "ciudad": "",
+                      "distrito": dist, "provincia": pr["NOMBPROV"].title(), "departamento": pr["NOMBDEP"].title(),
+                      "lat": round(lat, 4), "lon": round(lon, 4)})
+    df = pd.DataFrame(filas).drop_duplicates("ubigeo").sort_values("ubigeo")
+    DATOS.mkdir(exist_ok=True)
+    df.to_csv(DATOS / "puntos_distritos.csv", index=False)
+    log.info("Generados %s puntos de distrito (%s) en datos/puntos_distritos.csv", len(df), ", ".join(departamentos))
+    return df

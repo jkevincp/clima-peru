@@ -37,7 +37,7 @@
   function iniciarMapa() {
     mapa = L.map("mapa", { zoomControl: false, attributionControl: true, minZoom: 4, maxBounds: [[-25, -90], [5, -60]] })
       .fitBounds([[-18.4, -81.4], [-0.1, -68.6]], { padding: [10, 10] });
-    L.control.zoom({ position: "topright", zoomInTitle: "Acercar", zoomOutTitle: "Alejar" }).addTo(mapa);
+    L.control.zoom({ position: "bottomright", zoomInTitle: "Acercar", zoomOutTitle: "Alejar" }).addTo(mapa);
     mapa.attributionControl.setPrefix(false);
     // Capas propias encima de los departamentos (los nombres van arriba de todo para que siempre se puedan tocar). La capa no captura clics (pointer-events: none);
     // solo sus elementos interactivos, así un clic fuera de un punto llega al departamento de abajo.
@@ -376,6 +376,7 @@
       h += '<section class="seccion"><h3>Próximos 7 días</h3>' + tiraDias(d.dias) +
         '<p class="nota"><span class="muestra"></span> lluvia muy fuerte para la zona · mm = promedio de ECMWF y GFS · h = horas de lluvia · °C = máxima</p></section>';
     }
+    if (window.Campo) h += window.Campo.seccion(d);
     var conHora = (d.dias || []).filter(function (x) { return x.horas; });
     if (conHora.length) {
       var relevantes = conHora.filter(function (x) { return x.clase >= 1; });
@@ -673,6 +674,24 @@
       if (r.generado && r.generado !== estado.resumen.generado) aplicarResumen(r);
     }).catch(function () {});
   }
+  // ---------- ampliar / reducir el panel ----------
+  function iniciarAmpliar() {
+    var cuerpo = document.getElementById("cuerpo"), boton = document.getElementById("ampliar"), texto = document.getElementById("ampliar-texto");
+    function aplicar(on, guardar) {
+      cuerpo.classList.toggle("ampliado", on);
+      boton.setAttribute("aria-pressed", on ? "true" : "false");
+      texto.textContent = on ? "Reducir" : "Ampliar";
+      boton.title = on ? "Reducir el panel" : "Ampliar el panel";
+      if (guardar) { try { localStorage.setItem("vigia-panel-ampliado", on ? "1" : "0"); } catch (e) {} }
+      // el mapa cambia de tamaño: Leaflet debe recalcular cuando termina la transición
+      setTimeout(function () { if (mapa) mapa.invalidateSize({ pan: false }); }, 320);
+    }
+    var inicial = false;
+    try { inicial = localStorage.getItem("vigia-panel-ampliado") === "1"; } catch (e) {}
+    aplicar(inicial, false);
+    boton.addEventListener("click", function () { aplicar(!cuerpo.classList.contains("ampliado"), true); });
+  }
+
   function iniciarActualizacion() {
     pintarActualizado();
     setInterval(pintarActualizado, 60000);
@@ -684,7 +703,10 @@
   Promise.all([cargar("data/resumen.json?t=" + Date.now()), cargar("data/departamentos.json")]).then(function (r) {
     estado.resumen = r[0]; estado.deps = r[1];
     document.getElementById("aviso-demo").hidden = !estado.resumen.demo;
-    iniciarMapa(); pintarLeyenda(); pintarMar(); prepararBusqueda(); iniciarActualizacion();
+    iniciarMapa(); pintarLeyenda(); pintarMar(); prepararBusqueda(); iniciarActualizacion(); iniciarAmpliar();
+    if (window.Campo) window.Campo.iniciar({ alCambiar: function () {
+      if (estado.seleccion && estado.cache[estado.seleccion]) { var arriba = panel.scrollTop; mostrarPunto(estado.cache[estado.seleccion], false); panel.scrollTop = arriba; }
+    } });
     var id = decodeURIComponent((location.hash || "").slice(1));
     if (id && buscarResumen(id)) seleccionar(id, true); else mostrarResumen();
     if (window.matchMedia) matchMedia("(prefers-color-scheme: dark)").addEventListener("change", repintar);

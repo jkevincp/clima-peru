@@ -21,6 +21,10 @@ def _con_clave(params):
     return {**params, "apikey": CLAVE} if CLAVE else params
 
 
+# Variables hora a hora del pronóstico: lluvia (horarios) y las que usa "Mi cultivo"
+# (temperatura, humedad para hongos, viento para ventanas de aplicación).
+VARIABLES_HORARIAS = ["precipitation", "temperature_2m", "relative_humidity_2m", "wind_speed_10m"]
+
 DIR_HIST = DATOS / "openmeteo_historico"
 DIR_PRON = DATOS / "openmeteo_pronosticos"
 DIR_HORAS = DATOS / "openmeteo_pronosticos_horas"
@@ -109,7 +113,7 @@ def pronostico(cfg, puntos, s, hoy=None):
                 "latitude": ",".join(str(p["lat"]) for p in lote),
                 "longitude": ",".join(str(p["lon"]) for p in lote),
                 "daily": ",".join(c["variables_diarias"]),
-                "hourly": "precipitation",
+                "hourly": ",".join(VARIABLES_HORARIAS),
                 "forecast_days": pc["dias"] + 1,
                 "models": modelo,
                 "timezone": cfg["zona_horaria"],
@@ -126,7 +130,7 @@ def pronostico(cfg, puntos, s, hoy=None):
                     hh.columns = [col.replace(f"_{modelo}", "") for col in hh.columns]
                     hh["hora"] = pd.to_datetime(hh["hora"])
                     hh["punto_id"], hh["modelo"] = p["id"], modelo
-                    horarias.append(hh[["punto_id", "modelo", "hora", "precipitation"]])
+                    horarias.append(hh[["punto_id", "modelo", "hora"] + [v for v in VARIABLES_HORARIAS if v in hh]])
             time.sleep(c["pausa_seg"])
     if not filas:
         return

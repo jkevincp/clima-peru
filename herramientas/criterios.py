@@ -26,8 +26,9 @@ PISO_FUERTE_MM = 10.0   # "muy fuerte para la zona"
 PISO_EXTREMA_MM = 20.0  # "extrema para la zona" (en ciudades de la costa norte, 20 mm ya inundan calles)
 PISO_SEMANA_MM = (12.0, 25.0)  # acumulado de 7 días: "más de lo normal" y "muy por encima"
 LIGERA_MM = 0.5  # desde aquí se menciona como lluvia ligera, sin subir el nivel
-CONSEJO_FLORACION = ("Si tu cultivo está en floración, la humedad favorece oídio y antracnosis: "
-                     "revisa tu plan sanitario y evita aplicar justo antes de la lluvia.")
+CONSEJO_HUMEDAD = ("Con lluvia y humedad alta aumentan las enfermedades por hongos en la mayoría de cultivos, "
+                   "sobre todo en floración y cerca de la cosecha: revisa tu plan sanitario y evita aplicar "
+                   "justo antes de la lluvia.")
 
 ACCIONES = {
     0: {"general": ["Revisa este panel cada mañana: se actualiza a diario.",
@@ -42,19 +43,19 @@ ACCIONES = {
     2: {"general": ["Identifica rutas de evacuación y zonas altas cercanas.",
                     "No te quedes ni estaciones vehículos en el cauce de quebradas secas.",
                     "Coordina con tu municipalidad o Defensa Civil."],
-        "campo": ["Cosecha la fruta madura y protégela de la humedad.",
+        "campo": ["Adelanta la cosecha de lo que esté listo y protege lo cosechado de la humedad.",
                   "Refuerza bordos y limpia los canales de evacuación.",
                   "Sube a zonas altas abonos, insumos y equipos."]},
     3: {"general": ["Sigue las indicaciones de INDECI y de tu municipalidad.",
                     "Aléjate de quebradas, ríos y laderas durante y después de la lluvia.",
                     "No cruces calles ni caminos inundados."],
-        "campo": ["La seguridad de las personas va antes que el cultivo.",
+        "campo": ["La seguridad de las personas va antes que la producción.",
                   "Pon a salvo animales, maquinaria e insumos en zonas altas.",
                   "Registra los daños con fotos y fechas para reportes y seguros."]},
 }
 ACCIONES_CALOR = {"general": ["Hidrátate y evita el sol entre las 11 y las 15 horas."],
                   "campo": ["Riega temprano o al final de la tarde.",
-                            "Vigila el estrés por calor en plantas jóvenes y recién trasplantadas."]}
+                            "Vigila el estrés por calor en plantaciones jóvenes y en lo recién sembrado o trasplantado."]}
 
 
 def _ventana(doy, d, ancho=15):
@@ -151,8 +152,8 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
     matriz = matriz or {}
     hoy = pd.Timestamp(hoy).normalize()
     h = hist.set_index("fecha").sort_index()
-    salida = {k: p.get(k) for k in ("id", "provincia", "departamento", "lat", "lon")}
-    salida["nombre"] = p.get("ciudad") or p.get("provincia")
+    salida = {k: p.get(k) for k in ("id", "distrito", "provincia", "departamento", "lat", "lon")}
+    salida["nombre"] = p.get("ciudad") or p.get("distrito") or p.get("provincia")
     salida["temporadas"] = temporadas(hist, hoy)
 
     # --- Serie de los últimos 60 días observados ---
@@ -286,7 +287,7 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
 
     acciones = {k: list(v) for k, v in ACCIONES[nivel].items()}
     if ligeras or nivel_lluvia >= 1:
-        acciones["campo"].insert(0, CONSEJO_FLORACION)
+        acciones["campo"].insert(0, CONSEJO_HUMEDAD)
     if est_calor:
         for k in acciones:
             acciones[k] = ACCIONES_CALOR[k] + acciones[k]

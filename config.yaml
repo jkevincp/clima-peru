@@ -9,6 +9,10 @@ zona_horaria: "America/Lima"
 # (la lista se genera sola la primera vez en datos/puntos_provincias.csv).
 usar_puntos_provincias_csv: false
 
+# Además, un punto por cada distrito de estos departamentos (por ejemplo [Piura]; vacío = ninguno).
+# Los distritos cuyo centro queda a menos de 8 km de una ciudad ya vigilada no se repiten.
+distritos_de: [Piura]
+
 puntos:
   - {id: piura,       ciudad: Piura,       provincia: Piura,       departamento: Piura, lat: -5.1945, lon: -80.6328}
   - {id: sullana,     ciudad: Sullana,     provincia: Sullana,     departamento: Piura, lat: -4.9039, lon: -80.6853}
@@ -18,6 +22,7 @@ puntos:
   - {id: chulucanas,  ciudad: Chulucanas,  provincia: Morropon,    departamento: Piura, lat: -5.0925, lon: -80.1625}
   - {id: ayabaca,     ciudad: Ayabaca,     provincia: Ayabaca,     departamento: Piura, lat: -4.6397, lon: -79.7156}
   - {id: huancabamba, ciudad: Huancabamba, provincia: Huancabamba, departamento: Piura, lat: -5.2386, lon: -79.4508}
+  - {id: tambogrande, ciudad: Tambogrande, provincia: Piura,       departamento: Piura, lat: -4.9273, lon: -80.3443}
 
 # --- Open-Meteo: histórico ERA5 (desde 1940) y pronóstico a 7 días. Gratis, sin clave. ---
 openmeteo:
