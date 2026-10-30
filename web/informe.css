@@ -1,0 +1,133 @@
+/* Página del informe: documento para leer e imprimir. Usa los colores y tipografías de estilos.css. */
+html, body { height: auto; }
+body { background: var(--fondo); }
+.inf > * { min-width: 0; max-width: 100%; }
+.inf {
+  max-width: 1100px; margin: 0 auto; padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 22px;
+}
+.inf h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 800; line-height: 1.1; }
+.inf h2 { font-size: 1.5rem; font-weight: 800; }
+.inf h3 { font-size: 1.1rem; font-weight: 700; }
+.inf .num { font-family: var(--f-datos); font-variant-numeric: tabular-nums; }
+
+.inf-cabeza { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 20px; align-items: center; }
+.inf-cabeza h1, .inf-meta, .aviso-compartida { grid-column: 1 / -1; margin: 0; }
+.inf-marca { display: flex; align-items: center; gap: 8px; font: 800 1.05rem var(--f-display); color: var(--tinta); }
+.inf-marca .marca-icono { width: 28px; height: 28px; color: var(--acento); }
+.inf-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; justify-content: flex-end; }
+.inf-meta { color: var(--tinta-2); font-size: .9rem; }
+.aviso-compartida { padding: 8px 12px; border-radius: 8px; background: var(--n1-suave); font-size: .88rem; }
+
+.resumen, .inf-lugar {
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: 14px;
+  padding: 22px clamp(16px, 3vw, 28px); display: flex; flex-direction: column; gap: 14px; min-width: 0;
+}
+.resumen { border-top: 4px solid var(--acento); }
+.contexto { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--acento-suave); font-size: .92rem; }
+.grupo { display: flex; flex-direction: column; gap: 10px; padding-top: 12px; border-top: 1px solid var(--linea); }
+.grupo p { margin: 0; line-height: 1.55; }
+.extra { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: .9rem; }
+.indice { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.inf-lugar .lugar-cabeza .sub { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-top: 4px; }
+.pill {
+  display: inline-block; padding: 1px 8px; border-radius: 999px; font: 600 .72rem/1.6 var(--f-texto); white-space: nowrap;
+  background: var(--superficie-2); color: var(--tinta-2);
+}
+.pill.grupo { background: var(--acento-suave); color: var(--acento); }
+.ll-0 { background: var(--superficie-2); color: var(--tinta-3); }
+.ll-1 { background: var(--ll1); color: var(--tinta); }
+.ll-2, .vt-1, .ca-1, .uv-1 { background: var(--n1-suave); color: var(--tinta); }
+.ll-3, .vt-2, .ca-2, .uv-2 { background: var(--n2-suave); color: var(--tinta); }
+.ll-4, .vt-3, .vt-4, .ca-3, .ca-4, .uv-3, .uv-4 { background: var(--n3-suave); color: var(--n3); }
+.vt-0, .ca-0, .uv-0 { background: var(--n0-suave); color: var(--n0); }
+
+/* Tarjetas de 7 días */
+.tarjetas { display: grid; grid-template-columns: repeat(7, minmax(112px, 1fr)); gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.tarjeta {
+  display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 12px 8px; border-radius: 10px;
+  background: var(--superficie-2); text-align: center; min-width: 0;
+}
+.tarjeta-dia { font: 700 .8rem var(--f-display); text-transform: uppercase; letter-spacing: .06em; display: flex; flex-direction: column; }
+.tarjeta-dia small { font: 400 .72rem var(--f-texto); color: var(--tinta-3); letter-spacing: 0; }
+.tarjeta-icono { width: 30px; height: 30px; color: var(--tinta-2); }
+.tarjeta-icono svg { width: 100%; height: 100%; }
+.ll-ic-2 { color: var(--n1); } .ll-ic-3 { color: var(--n2); } .ll-ic-4 { color: var(--n3); }
+.tarjeta-temp { font-size: .82rem; color: var(--tinta-2); }
+.tarjeta-temp b { font: 700 1.15rem var(--f-datos); color: var(--tinta); }
+.tarjeta-mm { font-size: .82rem; }
+.tarjeta-viento { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.tarjeta-viento small { font-size: .7rem; color: var(--tinta-2); line-height: 1.3; }
+
+/* Tablas */
+.tabla-scroll { overflow-x: auto; }
+.tabla { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.tabla th, .tabla td { padding: 9px 10px; border-bottom: 1px solid var(--linea); text-align: left; vertical-align: top; }
+.tabla thead th { font: 600 .7rem var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); border-bottom-width: 2px; white-space: nowrap; }
+
+.tabla td.num, .tabla th.num { text-align: right; }
+.tabla tr.fecha-nueva th, .tabla tr.fecha-nueva td { border-top: 1px solid var(--tinta-3); }
+.tabla td.fuerte .num { font-weight: 600; }
+.tabla-dias .col-dia { white-space: nowrap; font-weight: 600; }
+.col-temp, .col-viento, .col-personal { display: table-cell; }
+.col-temp > *, .col-viento > *, .col-personal > * { display: block; }
+.col-personal .pill { display: inline-block; margin: 2px 0 6px; }
+.anom { font-size: .76rem; margin-top: 2px; }
+.sube { color: var(--n3); } .baja { color: var(--acento); }
+.lluvia-total { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rango, .cambio, .nota-tabla { display: block; margin-top: 3px; font-size: .76rem; color: var(--tinta-2); }
+.cambio b { font-family: var(--f-datos); }
+.bloques { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.bloque-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.bloque-fila .bloque { min-width: 9.5em; }
+.bloque { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: .72rem; font-weight: 600; white-space: nowrap; }
+.bl-dia { background: var(--n0-suave); color: var(--n0); }
+.bl-noche { background: var(--acento-suave); color: var(--acento); }
+.certeza-fila { margin-top: 5px; }
+.certeza-txt { font-size: .76rem; color: var(--tinta-2); }
+.modelos summary { cursor: pointer; font-weight: 600; color: var(--acento); padding: 4px 0; }
+.modelos[open] summary { margin-bottom: 8px; }
+.modelos .nota { margin: 0 0 8px; }
+.cultivo-informe .seccion { padding: 0; border: 0; }
+.inf-vacio { max-width: 560px; margin: 12vh auto; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.inf-vacio p { margin: 0; color: var(--tinta-2); line-height: 1.5; }
+.inf-pie { font-size: .8rem; color: var(--tinta-3); }
+.inf-pie p { margin: 0; }
+.nota { font-size: .8rem; color: var(--tinta-2); margin: 0; line-height: 1.45; }
+
+@media (max-width: 700px) {
+  .inf-cabeza { grid-template-columns: 1fr; }
+  .inf-acciones { justify-content: flex-start; }
+  .tabla-dias thead { display: none; }
+  .tabla-dias tr { display: grid; grid-template-columns: minmax(0, 1fr); padding: 10px 0; border-bottom: 1px solid var(--linea); }
+  .tabla-dias th, .tabla-dias td { border: 0; padding: 4px 0; }
+  .tabla-dias .col-dia { font-size: 1rem; }
+  .tarjetas { grid-template-columns: repeat(7, 104px); }
+  .tabla-dias .col-lluvia { min-width: 0; }
+}
+
+/* Impresión / PDF: A4, un lugar por página, sin botones */
+@page { size: A4; margin: 14mm 12mm 16mm; @bottom-center { content: "Vigía Niño · página " counter(page) " de " counter(pages); font-size: 8pt; color: #6b7c83; } }
+@media print {
+  :root { color-scheme: light; --fondo: #fff; --superficie: #fff; --superficie-2: #f2f6f7; --tinta: #10222a; --tinta-2: #4d6068; --tinta-3: #7d8e95; --linea: #d5e0e4;
+    --acento: #0b6a78; --acento-suave: #e0f0f2; --n0: #2f7a55; --n1: #a77c06; --n2: #c45a17; --n3: #b32a28;
+    --n0-suave: #e2f1e9; --n1-suave: #faf0d2; --n2-suave: #fbe4d6; --n3-suave: #f8dddc; --ll1: #d4e6f8; }
+  body { background: #fff; font-size: 10pt; }
+  .no-imprimir, .indice, .modelos summary { display: none !important; }
+  .inf { max-width: none; padding: 0; gap: 10px; }
+  .resumen, .inf-lugar { border: 0; border-radius: 0; padding: 0; box-shadow: none; }
+  .resumen { border-top: 3px solid var(--acento); padding-top: 8px; }
+  .inf-lugar { break-before: page; }
+  .tarjetas { grid-template-columns: repeat(7, 1fr); overflow: visible; gap: 4px; }
+  .tarjeta { padding: 6px 4px; }
+  .tabla { font-size: 8.5pt; }
+  .tabla th, .tabla td { padding: 4px 6px; }
+  .tabla tr, .tarjeta, .grupo p { break-inside: avoid; }
+  .tabla-scroll { overflow: visible; }
+  a { color: inherit; text-decoration: none; }
+  .pill, .bloque, .tarjeta, .contexto { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+.tabla-dias .col-temp { white-space: nowrap; }
+.tabla-dias .col-lluvia { min-width: 17em; }

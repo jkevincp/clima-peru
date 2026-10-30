@@ -480,3 +480,74 @@ body.con-modal { overflow: hidden; }
   .leyenda .anillo { width: 10px; height: 10px; }
   .caja-ll { width: 12px; height: 9px; }
 }
+
+/* ---------- Mi informe: botón, ventana y lugares en el mapa ---------- */
+.informe-chip {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 13px 6px 10px; border: 0; border-radius: 999px;
+  background: var(--tinta); color: var(--superficie); font-weight: 600; font-size: .85rem; cursor: pointer; white-space: nowrap;
+}
+.informe-chip svg { width: 17px; height: 17px; flex: none; }
+.informe-chip:hover { background: var(--acento); }
+.boton-sec {
+  padding: 7px 13px; border: 1px solid var(--linea); border-radius: 8px; background: var(--superficie); color: var(--tinta);
+  font-weight: 600; font-size: .86rem; cursor: pointer;
+}
+.boton-sec:hover { border-color: var(--acento); color: var(--acento); }
+.boton-sec:disabled, .boton:disabled { opacity: .45; cursor: not-allowed; }
+a.boton { display: inline-block; text-decoration: none; align-self: flex-start; }
+a.chip { text-decoration: none; color: var(--tinta); }
+.intereses { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.interes {
+  display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--linea); border-radius: 10px;
+  background: var(--superficie); color: var(--tinta); text-align: left; font-size: .88rem; cursor: pointer;
+}
+.interes:disabled { cursor: default; opacity: 1; }
+.interes.activo { border-color: var(--acento); background: var(--acento-suave); }
+.interes-check { width: 18px; height: 18px; margin-top: 1px; border-radius: 5px; border: 1.5px solid var(--tinta-3); flex: none; display: grid; place-items: center; }
+.interes.activo .interes-check { background: var(--acento); border-color: var(--acento); }
+.interes.activo .interes-check::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--superficie); border-top: 0; border-right: 0; transform: translateY(-1px) rotate(-45deg); }
+.interes-detalle { display: block; margin-top: 2px; font-size: .78rem; color: var(--tinta-2); line-height: 1.35; }
+.lugares-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border: 1px solid var(--linea); border-radius: 10px; }
+.lugar-fila { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-top: 1px solid var(--linea); }
+.lugar-fila:first-child { border-top: 0; }
+.lugar-fila-txt { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; }
+.lugar-fila-coord { width: 100%; font-size: .74rem; color: var(--tinta-3); }
+.agregar { display: flex; flex-wrap: wrap; gap: 8px; }
+.lugar-form { display: flex; flex-direction: column; gap: 12px; padding: 14px; border: 1px solid var(--acento); border-radius: 10px; background: var(--superficie-2); }
+.lugar-form-fila { display: flex; flex-direction: column; gap: 5px; }
+.lugar-form-fila label { font-size: .86rem; font-weight: 600; }
+.lugar-form-fila label span { font-weight: 400; color: var(--tinta-2); }
+.lugar-form input, .enlace-campo {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--linea); border-radius: 8px; background: var(--superficie); color: var(--tinta); font: inherit;
+}
+.lugar-form input[aria-invalid="true"] { border-color: var(--n3); }
+#lf-coord { font-family: var(--f-datos); font-size: .88rem; }
+.av-ref.error { color: var(--n3); }
+.lugar-form-pie { display: flex; justify-content: flex-end; align-items: center; gap: 16px; }
+.compartir { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding-top: 4px; }
+.enlace-campo { font-family: var(--f-datos); font-size: .76rem; }
+.modal-pie { flex-wrap: wrap; }
+.modal-pie [data-mi="cerrar"] { margin-right: auto; }
+
+/* lugares propios en el mapa */
+.mi-lugar { width: 0; height: 0; }
+.mi-lugar-pin {
+  display: inline-block; width: 13px; height: 13px; border-radius: 3px; transform: rotate(45deg);
+  background: var(--acento); border: 2px solid var(--superficie); box-shadow: 0 0 0 1px var(--tinta), 0 2px 6px rgba(0,0,0,.25); flex: none;
+}
+.mi-lugar .mi-lugar-pin { position: absolute; left: -7px; top: -7px; }
+.mi-lugar-nombre {
+  position: absolute; left: 11px; top: -10px; padding: 1px 6px; border-radius: 4px; white-space: nowrap;
+  background: var(--tinta); color: var(--superficie); font: 600 .72rem var(--f-texto);
+}
+.popup-lugar { display: flex; flex-direction: column; gap: 6px; min-width: 170px; font: .86rem var(--f-texto); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--superficie); color: var(--tinta); }
+.banda-marcar {
+  position: absolute; z-index: 1000; left: 50%; top: 58px; transform: translateX(-50%); width: max-content; max-width: calc(100% - 24px);
+  display: flex; align-items: center; gap: 14px; padding: 9px 14px; border-radius: 10px;
+  background: var(--tinta); color: var(--superficie); font-size: .86rem; box-shadow: var(--sombra);
+}
+.banda-marcar .enlace { color: var(--superficie); text-decoration: underline; }
+.modo-marcar #mapa { cursor: crosshair; }
+.modo-marcar .leaflet-interactive, .modo-marcar .leaflet-marker-icon { pointer-events: none !important; }
+.mi-informe-invita { background: linear-gradient(var(--superficie-2), transparent 85%); }

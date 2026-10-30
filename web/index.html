@@ -17,6 +17,10 @@
         <p class="marca-sub">Riesgo a 7 días · <span id="actualizado">Perú</span></p>
       </div>
     </div>
+    <button class="informe-chip" id="mi-informe" type="button">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2.8h6l3.2 3.2V17a.8.8 0 0 1-.8.8H6a.8.8 0 0 1-.8-.8V3.6a.8.8 0 0 1 .8-.8Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h5M8 12h5M8 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span id="mi-informe-texto">Mi informe</span>
+    </button>
     <button class="cultivo-chip" id="mi-cultivo" type="button" aria-haspopup="dialog" aria-controls="modal-cultivo">
       <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 17V9M10 9c0-3 2-5.5 6-6-0.3 4-2.6 6-6 6Zm0 2C10 8 8.2 6 4.5 5.6 4.7 9 6.8 11 10 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span id="mi-cultivo-texto">Mi cultivo</span>
@@ -46,6 +50,10 @@
       <div id="mapa"></div>
       <div class="capas" id="capas" role="group" aria-label="Qué mostrar en el mapa"></div>
       <div class="leyenda" id="leyenda" aria-label="Niveles"></div>
+      <div class="banda-marcar" id="banda-marcar" role="status" hidden>
+        <span>Toca el mapa donde está tu lugar. Acerca el mapa para ubicarlo mejor.</span>
+        <button class="enlace" id="banda-cancelar" type="button">Cancelar</button>
+      </div>
     </section>
     <aside class="panel" id="panel" aria-live="polite">
       <div class="cargando">Cargando datos…</div>
@@ -72,9 +80,31 @@
   </div>
 </div>
 
+<div class="modal" id="modal-informe" role="dialog" aria-modal="true" aria-labelledby="modal-informe-titulo" hidden>
+  <div class="modal-caja">
+    <div class="modal-cabeza">
+      <div>
+        <h2 id="modal-informe-titulo">Mi informe</h2>
+        <p class="sub">Elige qué quieres ver y dónde. Se guarda en este navegador y con eso se arma tu informe de 7 días.</p>
+      </div>
+      <button class="modal-cerrar" type="button" data-mi="cerrar" aria-label="Cerrar">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal-cuerpo" id="modal-informe-cuerpo"></div>
+    <div class="modal-pie">
+      <button class="enlace" type="button" data-mi="cerrar">Ahora no</button>
+      <button class="boton-sec" id="mi-guardar" type="button">Guardar</button>
+      <button class="boton" id="mi-ver" type="button">Guardar y ver mi informe</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="config-informe.js"></script>
 <script src="cultivos.js"></script>
 <script src="campo.js"></script>
 <script src="vivo.js"></script>
 <script src="capas.js"></script>
+<script src="mis-lugares.js"></script>
 <script src="app.js"></script>

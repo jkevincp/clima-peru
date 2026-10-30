@@ -44,7 +44,8 @@ openmeteo:
   pronostico:
     activo: true
     dias: 7
-    modelos: [ecmwf_ifs025, gfs_seamless]   # se guarda cada pronóstico con su fecha de emisión
+    # ECMWF 9 km (principal), GFS y GEM (Canadá). Con 3 modelos, el nivel se basa en lo que ven 2 de 3.
+    modelos: [ecmwf_ifs, gfs_seamless, gem_seamless]   # se guarda cada pronóstico con su fecha de emisión
 
 # --- NOAA CPC: índices Niño 1+2 (costa peruana), 3, 4 y 3.4. Mensual desde 1950 y semanal desde 1990. ---
 noaa_enso:

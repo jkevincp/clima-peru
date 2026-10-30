@@ -164,10 +164,11 @@ def exportar(cfg, demo=False):
     if SITIO.exists():
         shutil.rmtree(SITIO)
     shutil.copytree(WEB, SITIO)
-    # GitHub Pages sirve el HTML tal cual: se le agrega la cabecera estándar
-    idx = SITIO / "index.html"
-    idx.write_text('<!doctype html>\n<html lang="es">\n<meta charset="utf-8">\n' + idx.read_text(encoding="utf-8"),
-                   encoding="utf-8")
+    # GitHub Pages sirve el HTML tal cual: a las páginas sin cabecera estándar se les agrega
+    for pag in SITIO.glob("*.html"):
+        txt = pag.read_text(encoding="utf-8")
+        if not txt.lstrip().lower().startswith("<!doctype"):
+            pag.write_text('<!doctype html>\n<html lang="es">\n<meta charset="utf-8">\n' + txt, encoding="utf-8")
 
     resumen, era5_hasta = [], None
     for p in cargar_puntos(cfg):
@@ -197,6 +198,7 @@ def exportar(cfg, demo=False):
                                 matrices.get(p["id"]))
         ev["hoy"] = hoy_mod.resumir(ahora_h.get(p["id"]), ahora_c.get(p["id"]))
         ev["campo"] = {"horario": campo.get(p["id"]), "et0": et0.get(p["id"], {})}
+        ev["clima"] = criterios.clima_exportable(clim, hist)
         _json(SITIO / "data" / "puntos" / f"{p['id']}.json", ev)
         resumen.append({k: ev.get(k) for k in ("id", "nombre", "provincia", "departamento", "lat", "lon",
                                                 "nivel", "veredicto", "cuando", "lluvia_7d_mm")})

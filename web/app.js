@@ -255,6 +255,7 @@
     }
     h += "</section>";
 
+    h += seccionMiInforme();
     h += seccionHoyResumen(lugares);
     h += '<section class="seccion"><h3>' + (estado.dep ? "Lugares" : "Dónde mirar") + "</h3>";
     if (!lista.length) h += '<p class="vacio">Ningún lugar muestra señales fuera de lo normal en los próximos 7 días.</p>';
@@ -267,6 +268,20 @@
     h += seccionNiveles();
     h += pie();
     panel.innerHTML = h;
+  }
+  function seccionMiInforme() {
+    var c = window.ConfigInforme && window.ConfigInforme.leer();
+    if (estado.dep) return "";
+    if (!c || !c.lugares.length) {
+      return '<section class="seccion mi-informe-invita"><div class="campo-cabeza"><span class="campo-icono">' +
+        '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 2.8h6l3.2 3.2V17a.8.8 0 0 1-.8.8H6a.8.8 0 0 1-.8-.8V3.6a.8.8 0 0 1 .8-.8Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h5M8 12h5M8 15h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>' +
+        '</span><h3>Tu informe de 7 días</h3></div><p class="sub">Marca tus fundos, estaciones o ciudades y recibe un informe con lluvia de día y de noche, viento, temperatura y lo que importa para tu cultivo, listo para descargar en PDF.</p>' +
+        '<button class="boton" type="button" data-mi="editar">Configurar mi informe</button></section>';
+    }
+    return '<section class="seccion"><div class="campo-cabeza"><h3>Mis lugares</h3><button class="enlace" type="button" data-mi="editar">Editar</button></div>' +
+      '<div class="chips">' + c.lugares.map(function (l) {
+        return '<a class="chip" href="informe.html#' + encodeURIComponent(l.id) + '">' + esc(l.nombre) + (l.grupo ? ' <span class="num">' + esc(l.grupo) + "</span>" : "") + "</a>";
+      }).join("") + '</div><a class="boton" href="informe.html">Ver mi informe completo</a></section>';
   }
   function seccionHoyResumen(lugares) {
     if (!estado.resumen.hoy_consultado) return "";
@@ -405,7 +420,7 @@
 
     if (d.dias && d.dias.length) {
       h += '<section class="seccion"><h3>Próximos 7 días</h3>' + tiraDias(d.dias) +
-        '<p class="nota"><span class="muestra"></span> lluvia muy fuerte para la zona · mm = promedio de ECMWF y GFS · h = horas de lluvia · °C = máxima</p></section>';
+        '<p class="nota"><span class="muestra"></span> lluvia muy fuerte para la zona · mm = promedio de los modelos · h = horas de lluvia · °C = máxima</p></section>';
     }
     if (window.Campo) h += window.Campo.seccion(d);
     var conHora = (d.dias || []).filter(function (x) { return x.horas; });
@@ -435,7 +450,7 @@
       if (window.matchMedia("(max-width: 860px)").matches) panel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
-  function nombreModelo(k) { return k.indexOf("ecmwf") === 0 ? "ECMWF" : k.indexOf("gfs") === 0 ? "GFS" : k.toUpperCase(); }
+  function nombreModelo(k) { return k.indexOf("ecmwf") === 0 ? "ECMWF" : k.indexOf("gfs") === 0 ? "GFS" : k.indexOf("gem") === 0 ? "GEM" : k.toUpperCase(); }
   function hora(h) { return h === 0 || h === 24 ? "0:00" : h + ":00"; }
   function bloqueHora(x, d) {
     var v = x.horas, f = new Date(x.fecha + "T12:00:00");
@@ -525,7 +540,7 @@
       var c = x.clase ? "var(--n" + x.clase + ")" : "var(--acento)";
       var alto = Math.min(100, x.lluvia_mm / tope * 100);
       var umbral = Math.min(100, x.umbral_fuerte_mm / tope * 100);
-      var titulo = Object.keys(x.modelos || {}).map(function (k) { return (k.indexOf("ecmwf") === 0 ? "ECMWF" : k.indexOf("gfs") === 0 ? "GFS" : k) + " " + x.modelos[k] + " mm"; }).join(" · ");
+      var titulo = Object.keys(x.modelos || {}).map(function (k) { return nombreModelo(k) + " " + x.modelos[k] + " mm"; }).join(" · ");
       return '<div class="dia" title="' + esc(titulo) + '"><span class="dia-nombre">' + esc(x.dia) + "</span>" +
         '<span class="dia-tubo" style="--c:' + c + '"><span class="dia-agua" style="height:' + alto.toFixed(1) + '%"></span>' +
         '<span class="dia-umbral" style="bottom:' + umbral.toFixed(1) + '%"></span></span>' +
@@ -790,6 +805,8 @@
         capaDeps.setStyle(estiloDep); marcarEtiquetas(); crearPuntos(); pintarLeyenda();
       },
     });
+    if (window.MisLugares) window.MisLugares.iniciar({ mapa: mapa, alCambiar: function () { if (!estado.seleccion) { var arriba = panel.scrollTop; mostrarResumen(); panel.scrollTop = arriba; } } });
+    if (location.hash === "#cultivo") setTimeout(function () { document.getElementById("mi-cultivo").click(); }, 300);
     if (window.Vivo) window.Vivo.iniciar({ puntos: estado.resumen.puntos, alActualizar: aplicarVivo });
     if (window.Campo) window.Campo.iniciar({ alCambiar: function () {
       if (estado.seleccion && estado.cache[estado.seleccion]) { var arriba = panel.scrollTop; mostrarPunto(estado.cache[estado.seleccion], false); panel.scrollTop = arriba; }

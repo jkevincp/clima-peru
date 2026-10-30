@@ -73,6 +73,7 @@ def climatologia(hist):
     s7 = pr.rolling(7).sum()
     s15 = pr.rolling(15).sum()
     tx = base["temperature_2m_max"]
+    tn = base["temperature_2m_min"] if "temperature_2m_min" in base else tx * np.nan
     doy = base.index.dayofyear.values
     filas = []
     for d in range(1, 367):
@@ -90,8 +91,20 @@ def climatologia(hist):
         filas.append({"doy": d, "t1": t1, "t2": t2, "t3": t3,
                       "p50_7d": np.nanmedian(v7), "p95_7d": np.nanpercentile(v7, 95),
                       "p50_15d": np.nanmedian(v15),
-                      "tx_media": np.nanmean(tx.values[m]), "tx_desv": max(np.nanstd(tx.values[m]), 0.5)})
+                      "tx_media": np.nanmean(tx.values[m]), "tx_desv": max(np.nanstd(tx.values[m]), 0.5),
+                      "tn_media": np.nanmean(tn.values[m])})
     return pd.DataFrame(filas).set_index("doy")
+
+
+def _consenso(clases):
+    """Nivel en que coinciden los modelos. Con 3 o más: el que alcanza la mayoría (2 de 3).
+    Con 2: si solo uno ve lluvia fuerte, baja un nivel."""
+    c = sorted(clases, reverse=True)
+    if not c:
+        return 0
+    if len(c) >= 3:
+        return c[len(c) // 2]  # mediana: lo que ven al menos la mitad de los modelos
+    return c[0] if c[-1] >= c[0] - 1 else c[0] - 1
 
 
 def _clase(v, u):
@@ -178,8 +191,7 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
     for f, fila in lluvia.iterrows():
         u = clim.loc[f.dayofyear]
         clases = {m: _clase(fila[m], u) for m in modelos}
-        cmax, cmin = max(clases.values()), min(clases.values())
-        puntaje = cmax if cmin >= cmax - 1 else cmax - 1  # un solo modelo con lluvia fuerte: baja un nivel
+        puntaje = _consenso(list(clases.values()))
         tx = tmax.get(f, np.nan)
         z = (tx - u.tx_media) / u.tx_desv if pd.notna(tx) else 0
         plazo = int((f - hoy).days)
@@ -203,9 +215,7 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
             return 2
         return 1 if v >= max(2 * u0.p50_7d, PISO_SEMANA_MM[0]) else 0
     por_modelo = [_clase_semana(float(lluvia[m].sum())) for m in modelos]
-    est_acum = _clase_semana(acum)
-    if len(por_modelo) > 1 and min(por_modelo) < max(por_modelo) - 1:
-        est_acum = max(por_modelo) - 1  # solo un modelo ve una semana muy lluviosa: baja un nivel
+    est_acum = min(_clase_semana(acum), _consenso(por_modelo))
     nivel_lluvia = max(puntaje_lluvia, est_acum)
 
     # --- Suelo: últimos 15 días observados ---
@@ -265,8 +275,10 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
     # --- Criterios explicables ---
     acuerdo = (" · ".join(f"{_nombre_modelo(m)} {fila_clave[m]:.0f} mm" for m in modelos))
     if len(modelos) > 1 and puntaje_lluvia >= 1:
-        coinciden = min(clases_clave.values()) >= 1
-        acuerdo += ". " + ("Ambos modelos la muestran." if coinciden else "Solo un modelo la muestra; menos certeza.")
+        n_ven = sum(1 for c in clases_clave.values() if c >= 1)
+        acuerdo += ". " + ("Todos los modelos la muestran." if n_ven == len(modelos) else
+                           f"{n_ven} de {len(modelos)} modelos la muestran." if n_ven > 1 else
+                           "Solo un modelo la muestra; menos certeza.")
     criterios = [
         {"titulo": "Día más lluvioso", "estado": int(puntaje_lluvia),
          "valor": f"{fila_clave.mean():.0f} mm el {_dia(f_clave, True)}",
@@ -315,7 +327,7 @@ def evaluar(p, hist, pron, clim, mar, hoy, matriz=None):
 
 
 def _nombre_modelo(m):
-    return {"ecmwf_ifs025": "ECMWF", "gfs_seamless": "GFS"}.get(m, m.split("_")[0].upper())
+    return {"ecmwf_ifs": "ECMWF", "ecmwf_ifs025": "ECMWF", "gfs_seamless": "GFS", "gem_seamless": "GEM"}.get(m, m.split("_")[0].upper())
 
 
 def _serie(obs, pron, clim):
@@ -324,3 +336,22 @@ def _serie(obs, pron, clim):
             "obs": [round(float(obs[f]), 1) if f in obs.index and pd.notna(obs[f]) else None for f in fechas],
             "pron": [round(float(pron[f]), 1) if f in pron.index else None for f in fechas],
             "umbral": [round(float(clim.loc[f.dayofyear].t2), 1) for f in fechas]}
+
+
+NIVELES_RANGO = [50, 75, 90, 95, 98, 99, 99.5]
+
+
+def clima_exportable(clim, hist):
+    """Normales por día del año y cuantiles de lluvia diaria por mes, para el informe en el navegador."""
+    h = hist.set_index("fecha").sort_index()
+    base = h.loc["1991":"2020"] if len(h.loc["1991":"2020"]) >= 3650 else h
+    pr = base["precipitation_sum"].dropna()
+    rango = {}
+    for mes in range(1, 13):
+        v = pr[pr.index.month == mes].values
+        if len(v) >= 100:
+            rango[str(mes)] = [round(float(x), 2) for x in np.percentile(v, NIVELES_RANGO)]
+    r1 = lambda serie: [None if pd.isna(x) else round(float(x), 1) for x in serie]
+    return {"base": f"{base.index.min():%Y}-{base.index.max():%Y}",
+            "t1": r1(clim.t1), "t2": r1(clim.t2), "t3": r1(clim.t3), "tx": r1(clim.tx_media), "tn": r1(clim.tn_media),
+            "rango_niveles": NIVELES_RANGO, "rango": rango}
